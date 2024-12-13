@@ -14,9 +14,12 @@ public interface LoginService {
 
 	boolean isMpinCreated(String userName);
 
-	String createMpin(String username, Integer mpin);
 
 	String register(LoginRequest loginRequest);
+
+	LoginEntity createMpin(Long id, Integer mpin);
+
+	LoginEntity resetMpin(Long id, Integer newMpin);
 
 	
 

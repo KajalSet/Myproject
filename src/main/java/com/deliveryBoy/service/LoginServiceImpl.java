@@ -61,31 +61,39 @@ public class LoginServiceImpl implements LoginService {
 	                          .orElse(false);
 	}//ismpincreated
 
-	
+
+
+
 	@Override
-	public String createMpin(String username, Integer mpin) {
+	public LoginEntity createMpin(Long id, Integer mpin) {
+		LoginEntity loginEntity=loginRepository.findById(id).orElseThrow(()->new IllegalArgumentException("User not found!"));
+		
+		if(mpin.toString().length()!=4) {
+			throw new IllegalArgumentException("Mpin must be a 4 digit number!");
+		}
+		loginEntity.setMpin(passwordEncoder.encode(mpin.toString()));
+		loginEntity.setMpinCreated(true);
+		
+		return loginRepository.save(loginEntity);
+	}
 
-	    Optional<LoginEntity> userOptional = loginRepository.findByUserName(username);
 
-	    if (!userOptional.isPresent()) {
-	        
-	        throw new UsernameNotFoundException("User not found for username: " + username);
-	    }
 
-	    
-	    LoginEntity user = userOptional.get();
-	    
-	    if (user == null) {
-	        throw new UsernameNotFoundException("User not found for username: " + username);
-	    }
 
-	    user.setMpin(mpin);
-	    user.setMpinCreated(true);
+	@Override
+	public LoginEntity resetMpin(Long id, Integer newMpin) {
+		LoginEntity loginEntity=loginRepository.findById(id)
+				.orElseThrow(()->new IllegalArgumentException("User Not Found!"));
+		
+		if(newMpin.toString().length()!=4) {
+			throw new IllegalArgumentException("MPIN must be a 4digit number!");
+		}
+		loginEntity.setMpin(passwordEncoder.encode(newMpin.toString()));
+		return loginRepository.save(loginEntity);
+	}
 
-	    loginRepository.save(user);
-	    return "MPIN created successfully.";
-	}//create mpin
-
+	
+	
 	
 
 

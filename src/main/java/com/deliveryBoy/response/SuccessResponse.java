@@ -18,6 +18,7 @@ public class SuccessResponse {
 	private String message;
 	private Object data;
 	private HttpStatus status;
+	private String token;
 	private LocalDateTime timeStamp;
 
 }

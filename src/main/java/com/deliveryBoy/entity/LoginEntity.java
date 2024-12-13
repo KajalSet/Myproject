@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.AssertFalse;
 
 import lombok.Data;
 
@@ -17,17 +18,17 @@ public class LoginEntity {
 @GeneratedValue(strategy =GenerationType.IDENTITY)
 private Long id;
 
-@Column(name="UserName",unique=true)
+@Column(nullable =false  ,name="UserName",unique=true)
 private String userName;
 
-@Column(name="Password")
+@Column(name="Password",nullable =false)
 private String password;
 
-@Column(name="Mpin")
-private Integer mpin;
+@Column(name="Mpin",nullable =false)
+private String mpin;
 
 @Column(name = "isMpinCreated")
-private boolean isMpinCreated;
+private boolean isMpinCreated=false;
 	
 	
 	

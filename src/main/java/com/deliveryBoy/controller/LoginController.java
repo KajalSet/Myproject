@@ -2,20 +2,19 @@ package com.deliveryBoy.controller;
 
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliveryBoy.entity.LoginEntity;
 import com.deliveryBoy.request.LoginRequest;
-import com.deliveryBoy.request.MpinRequest;
 import com.deliveryBoy.response.SuccessResponse;
 import com.deliveryBoy.service.LoginService;
 
@@ -44,7 +43,7 @@ public class LoginController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed");
 		}
 		
-	}
+	}//1.register
 	
 	
 	@PostMapping("/login")
@@ -58,6 +57,7 @@ public class LoginController {
 
         if (isValidUser) {
         	if(loginService.isMpinCreated(loginRequest.getUserName())) {
+        		
         		return ResponseEntity.ok(SuccessResponse.builder()
         			    .message("Login successful. MPIN is already set.")
         			    .status(HttpStatus.OK)
@@ -81,17 +81,36 @@ public class LoginController {
             }
         
         
-    }//login
+    }//2.login
+	//Token Generation is Pending 
 	
-	@PostMapping("/create-mpin")
-	public ResponseEntity<String> createMpin( @Valid @RequestBody MpinRequest mpinRequest) {
+   @PostMapping("/create-mpin")
+   
+   public ResponseEntity<LoginEntity>createMpin(@RequestParam Long id,@RequestParam Integer mpin){
+	   
+	   LoginEntity mpincreated=loginService.createMpin(id, mpin);
+	   
+	  return ResponseEntity.status(HttpStatus.CREATED).body(mpincreated);
+   }//3.mpincreation
+	
+   
+   
+   @PutMapping("/reset-mpin")
+	public ResponseEntity<SuccessResponse>resetMpin(@RequestParam Long id,@RequestParam Integer newMpin){
 		
-		String mpin = loginService.createMpin(mpinRequest.getUsername(),mpinRequest.getMpin());
+	   LoginEntity resetMpin=loginService.resetMpin(id,newMpin);
 		
-		return ResponseEntity.ok(mpin);
-	}//create mpin
+		return ResponseEntity.ok(SuccessResponse.builder()
+				.data(resetMpin)
+                .message("Mpin reset successful")
+                .status(HttpStatus.OK)
+                .timeStamp(LocalDateTime.now())
+                .build());
 		
-		
+	}//4.resetmpin
+   
+   //5.Forgot Password is pending
+   
 		
 }
 	
