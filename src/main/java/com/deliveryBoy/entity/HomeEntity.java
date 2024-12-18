@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
@@ -17,6 +18,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(name="HomePage")
 public class HomeEntity {
 	
 	@Id
