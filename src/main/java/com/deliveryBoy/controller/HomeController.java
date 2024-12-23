@@ -34,7 +34,7 @@ public class HomeController {
 	}
 	
 	
-	@GetMapping("/orders-by-status/{status}")
+	@GetMapping("/orders-by-status/{status}")//pending or delivered
 	public ResponseEntity<List<HomeRequest>> getOrdersByStatus(@PathVariable String status) {
 	    List<HomeRequest> orders = homeService.getOrdersByStatus(status);
 	    return ResponseEntity.ok(orders);

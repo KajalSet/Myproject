@@ -56,16 +56,9 @@ public class OrderController {
 
 	        return new ResponseEntity<>("Order status updated successfully.", HttpStatus.OK);
 		
-		} catch (IllegalArgumentException e) {
-			
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            
-        } catch (EntityNotFoundException e) {
-        	
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
             
         }catch (Exception e) {
-	        return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+	        return new ResponseEntity<>("invalid order", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 		
 		
@@ -81,15 +74,9 @@ public class OrderController {
             
             return new ResponseEntity<>("Order successfully delivered.", HttpStatus.OK);
             
-        } catch (IllegalArgumentException e) {
-        	
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            
-        } catch (EntityNotFoundException e) {
-        	
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-            
-        }
+        }catch (Exception e) {
+	        return new ResponseEntity<>("error occurred order delivering", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
     }
 	
 	

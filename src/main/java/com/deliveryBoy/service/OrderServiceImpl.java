@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.entity.OrderStatusLog;
+import com.deliveryBoy.entity.ProfileEntity;
 import com.deliveryBoy.repository.OrderRepository;
+import com.deliveryBoy.repository.OrderStatusLogRepository;
 import com.deliveryBoy.response.OrderResponse;
 
 @Service
@@ -24,6 +26,12 @@ public class OrderServiceImpl implements OrderService {
   private OrderRepository orderRepository;
 	@Autowired
    private OrderStatusLogRepository orderStatusLogRepository;
+	
+	@Autowired
+	private ProfileService profileService;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@Override
 	public List<OrderResponse> getOrdersByCategory(String category) {
@@ -101,6 +109,10 @@ public class OrderServiceImpl implements OrderService {
 	        throw new IllegalArgumentException("Invalid status: " + newStatus);
 	    }
 
+	//today orders should be pickedup or in transit	
+		
+		
+		
 	    if ("In Transit".equals(newStatus)) {
 	        String otp = generateOtp();
 	        order.setOtp(otp);
@@ -110,6 +122,17 @@ public class OrderServiceImpl implements OrderService {
 
 	    order.setStatus(newStatus);
 	    orderRepository.save(order);
+	    
+	    
+	    
+	    ProfileEntity deliveryBoy = order.getAssignedDeliveryBoy(); 
+	    
+	    if(deliveryBoy!=null) {
+	    	String description = String.format("Order #%d  for customer %s status changed from %s to %s.",
+	                orderId,order.getCustomerName(),order.getStatus(), newStatus);
+	        notificationService.createNotification(deliveryBoy, order, description);
+	    }
+	    
 		
 	}
 
@@ -122,6 +145,13 @@ public class OrderServiceImpl implements OrderService {
 	    log.setUpdatedBy(updatedBy);
 
 	    orderStatusLogRepository.save(log); 
+	}
+
+
+	@Override
+	public OrderEntity getOrderById(Long orderId) {
+	
+		return orderRepository.findById(orderId).orElse(null);
 	}
 
 	

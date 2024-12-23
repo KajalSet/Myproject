@@ -17,17 +17,22 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="Notification")
+
 public class NotificationEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String title;
-	private String message;
+	
+	private String customerName;
+	private String Brief;
 	private LocalDateTime timestamp;
 	private boolean isread;
 	
 	@ManyToOne
 	private OrderEntity order;
+	
+	@ManyToOne
+	private ProfileEntity profileEntity;
 	
 }

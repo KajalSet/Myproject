@@ -2,6 +2,7 @@ package com.deliveryBoy.service;
 
 import java.util.List;
 
+import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.response.OrderResponse;
 
 public interface OrderService {
@@ -10,6 +11,8 @@ public interface OrderService {
 
 	void updateOrderStatus(Long orderId, String status);
 	void verifyOtpAndMarkDelivered(Long orderId, String otp);
-	void updateOrderStatus(Long orderId, String newStatus, String updatedBy); 
+	void updateOrderStatus(Long orderId, String newStatus, String updatedBy);
+
+	OrderEntity getOrderById(Long orderId); 
 
 }

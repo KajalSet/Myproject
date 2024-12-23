@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.deliveryBoy.entity.NotificationEntity;
 import com.deliveryBoy.entity.ProfileEntity;
 
 
@@ -16,6 +17,8 @@ public interface ProfileService {
 	List<ProfileEntity> getAllProfiles();
 
 	void deleteProfile(Long userId);
+
+	List<NotificationEntity> getNotificationForProfile(Long userId);
 
 	
 
