@@ -6,9 +6,11 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,71 +49,78 @@ public class LoginController {
 	
 	
 	@PostMapping("/login")
-    public ResponseEntity<SuccessResponse> login(@RequestBody LoginRequest loginRequest) {
-        String username = loginRequest.getUserName();
-        String password = loginRequest.getPassword();
-
-        
-        
-        boolean isValidUser = loginService.login(username, password);
-
-        if (isValidUser) {
-        	if(loginService.isMpinCreated(loginRequest.getUserName())) {
-        		
-        		return ResponseEntity.ok(SuccessResponse.builder()
-        			    .message("Login successful. MPIN is already set.")
-        			    .status(HttpStatus.OK)
-        			    .timeStamp(LocalDateTime.now())
-        			    .build());
-
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+        	return loginService.login(loginRequest.getUserName(), loginRequest.getPassword());
         	
-        	}else {
-        		return ResponseEntity.ok(SuccessResponse.builder()
-                        .message("Login successful. Please set your MPIN.")
-                        .status(HttpStatus.OK)
-                        .timeStamp(LocalDateTime.now())
-                        .build());
-            }
-            
-        }else {
-        	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(SuccessResponse.builder()
-                     .message("Invalid username or password")
-                     .status(HttpStatus.UNAUTHORIZED)
-                     .build());
-            }
-        
+        }catch(Exception e) {
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login failed: " + e.getMessage());
+        }
         
     }//2.login
 	//Token Generation is Pending 
 	
-   @PostMapping("/create-mpin")
-   
-   public ResponseEntity<LoginEntity>createMpin(@RequestParam Long id,@RequestParam Integer mpin){
+	 @GetMapping("/isMpinCreated")
+	    public ResponseEntity<Boolean> isMpinCreated(@RequestParam String username) {
+	        boolean isCreated = loginService.isMpinCreated(username);
+	        return ResponseEntity.ok(isCreated);
+	    }
+	 
+	
+	 @PostMapping("/createMpin")
+	    public ResponseEntity<String> createMpin(@RequestParam Long id, @RequestParam Integer mpin) {
+	        try {
+	            LoginEntity loginEntity = loginService.createMpin(id, mpin);
+	            return ResponseEntity.ok("MPIN created successfully");
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	            		.body(e.getMessage());
+	        }
+	    }
 	   
-	   LoginEntity mpincreated=loginService.createMpin(id, mpin);
 	   
-	  return ResponseEntity.status(HttpStatus.CREATED).body(mpincreated);
-   }//3.mpincreation
+	   
+  
 	
    
    
-   @PutMapping("/reset-mpin")
-	public ResponseEntity<SuccessResponse>resetMpin(@RequestParam Long id,@RequestParam Integer newMpin){
-		
-	   LoginEntity resetMpin=loginService.resetMpin(id,newMpin);
-		
-		return ResponseEntity.ok(SuccessResponse.builder()
-				.data(resetMpin)
-                .message("Mpin reset successful")
-                .status(HttpStatus.OK)
-                .timeStamp(LocalDateTime.now())
-                .build());
-		
-	}//4.resetmpin
+	 @PostMapping("/resetMpin")
+	    public ResponseEntity<String> resetMpin(@RequestParam Long id, @RequestParam Integer newMpin) {
+	        try {
+	            loginService.resetMpin(id, newMpin);
+	            return ResponseEntity.ok("MPIN reset successfully");
+	        } catch (IllegalArgumentException e) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	        }
+	    }
    
    //5.Forgot Password is pending
    
-		
+	 @PostMapping("/validateMpin")
+	 public ResponseEntity<String> validateMpin(@RequestParam Long id, @RequestParam Integer mpin) {
+	     try {
+	         boolean isValid = loginService.validateMpin(id, mpin);
+	         if (isValid) {
+	             return ResponseEntity.ok("MPIN is valid");
+	         } else {
+	             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid MPIN");
+	         }
+	     } catch (Exception e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	     }
+	 }
+
+	 
+//	 @GetMapping("/api/sensitive/data")
+//	 public ResponseEntity<?> getSensitiveData(@RequestHeader("UserId") String userId,
+//	                                           @RequestHeader("Mpin") String mpin) {
+//	     // Data retrieval code (only if MPIN is valid)
+//	     return ResponseEntity.ok(sensitiveData);
+//	 }
+
+	
+	 
+	 
 }
 	
 

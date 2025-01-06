@@ -1,8 +1,8 @@
-package com.deliveryBoy.exception;
-
-public class UserNotFoundException extends RuntimeException {
-
-	public UserNotFoundException(String message) {
-		super(message);
-	}
-}
+//package com.deliveryBoy.exception;
+//
+//public class UserNotFoundException extends RuntimeException {
+//
+//	public UserNotFoundException(String message) {
+//		super(message);
+//	}
+//}

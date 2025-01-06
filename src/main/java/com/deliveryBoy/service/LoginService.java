@@ -1,5 +1,6 @@
 package com.deliveryBoy.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.deliveryBoy.entity.LoginEntity;
@@ -10,7 +11,7 @@ public interface LoginService {
 
 
 
-	boolean login(String username, String password);
+	ResponseEntity<String> login(String username, String password);
 
 	boolean isMpinCreated(String userName);
 
@@ -20,6 +21,10 @@ public interface LoginService {
 	LoginEntity createMpin(Long id, Integer mpin);
 
 	LoginEntity resetMpin(Long id, Integer newMpin);
+
+	LoginEntity save(LoginEntity loginEntity);
+
+	boolean validateMpin(Long id, Integer mpin);
 
 	
 

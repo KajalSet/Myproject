@@ -1,11 +1,16 @@
 package com.deliveryBoy.entity;
 
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.AssertFalse;
 
 import lombok.Data;
@@ -18,19 +23,19 @@ public class LoginEntity {
 @GeneratedValue(strategy =GenerationType.IDENTITY)
 private Long id;
 
-@Column(nullable =false  ,name="UserName",unique=true)
-private String userName;
+@OneToOne
+@JoinColumn(name = "user_id")
+private UserEntity user;
 
-@Column(name="Password",nullable =false)
-private String password;
 
-@Column(name="Mpin",nullable =false)
-private String mpin;
+
+@Transient
+private Integer mpin;
 
 @Column(name = "isMpinCreated")
 private boolean isMpinCreated=false;
 	
-	
+private String encryptedMpin;	
 	
 	
 	

@@ -1,18 +1,5 @@
 package com.deliveryBoy.entity;
 
-import java.time.LocalDate;
-
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.deliveryBoy.enums.AvailabilityStatus;
-import com.deliveryBoy.enums.OrderStatus;
-import com.deliveryBoy.enums.RejectOrderReason;
 
 import lombok.Data;
 
