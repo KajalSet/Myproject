@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.AssertFalse;
 
 import lombok.Data;
 
@@ -23,20 +22,19 @@ public class LoginEntity {
 @GeneratedValue(strategy =GenerationType.IDENTITY)
 private Long id;
 
-@OneToOne
-@JoinColumn(name = "user_id")
-private UserEntity user;
+//@OneToOne
+//@JoinColumn(name = "user_id")
+//private UserEntity user;
+private String userName;
+
+private String password;
 
 
-
-@Transient
+//@Transient
 private Integer mpin;
 
 @Column(name = "isMpinCreated")
 private boolean isMpinCreated=false;
-	
-private String encryptedMpin;	
-	
 	
 	
 }

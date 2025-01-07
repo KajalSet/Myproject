@@ -11,4 +11,6 @@ public interface RegisterRepository extends JpaRepository<RegisterEntity,Long> {
 
 	Optional<LoginEntity> findByUserName(String userName);
 
+	RegisterEntity findByMobileNumber(String mobileNumber);
+
 }

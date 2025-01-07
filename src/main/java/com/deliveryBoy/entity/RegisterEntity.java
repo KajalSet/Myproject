@@ -22,5 +22,11 @@ public class RegisterEntity {
 
 	    @Column(nullable = false)
 	    private String password;
+	    
+	    
+	    private String mobileNumber;
+//
+	    
+	    private String email; 
 
 }

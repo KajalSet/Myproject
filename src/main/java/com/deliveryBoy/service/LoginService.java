@@ -1,20 +1,17 @@
 package com.deliveryBoy.service;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import com.deliveryBoy.entity.LoginEntity;
 import com.deliveryBoy.request.LoginRequest;
 
-
 public interface LoginService {
-
-
 
 	ResponseEntity<String> login(String username, String password);
 
 	boolean isMpinCreated(String userName);
 
+	boolean authenticate(String userName, String password);
 
 	String register(LoginRequest loginRequest);
 
@@ -26,14 +23,6 @@ public interface LoginService {
 
 	boolean validateMpin(Long id, Integer mpin);
 
-	
-
-	
-
-
-
-	 
-
-	
+	boolean updatePassword(String phoneNumber, String newPassword);
 
 }
