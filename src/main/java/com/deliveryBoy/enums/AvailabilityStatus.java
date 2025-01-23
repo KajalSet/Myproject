@@ -1,5 +1,5 @@
 package com.deliveryBoy.enums;
 
 public enum AvailabilityStatus {
-ONLINE,OFFLINE
+ONLINE,OFFLINE,AVAILABLE, UNAVAILABLE,
 }

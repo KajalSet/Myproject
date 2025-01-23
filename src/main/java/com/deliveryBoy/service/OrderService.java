@@ -1,35 +1,37 @@
-//package com.deliveryBoy.service;
-//
-//import java.util.List;
-//
-//import com.deliveryBoy.entity.OrderEntity;
-//import com.deliveryBoy.enums.OrderStatus;
-//
-//
-//
-//public interface OrderService {
-//
-//	List<OrderResponse> getOrdersByCategory(String category);
-//
-//	void updateOrderStatus(Long orderId, String status);
-//	
-//	void verifyOtpAndMarkDelivered(Long orderId, String otp);
-//	
-//
-//	OrderEntity getOrderById(Long orderId);
-//
-//	void saveOrder(OrderRequest orderRequest);
-//
-//	void updateOrderStatus(Long orderId, OrderStatus newStatus, String updatedBy);
-//
-//	void progressOrderStatus(Long orderId, OrderStatus currentStatus);
-//
-//	String generateOtpForDelivery(Long orderId, String customerId);
-//
-//	boolean cancelOrder(Long orderId, String reason);
-//
-//	void updatePaymentStatus(PaymentStatusRequest request);
-//
-//	
-//
-//}
+package com.deliveryBoy.service;
+
+import java.util.List;
+import java.util.UUID;
+
+import com.deliveryBoy.entity.OrderEntity;
+import com.deliveryBoy.enums.AvailabilityStatus;
+import com.deliveryBoy.enums.OrderStatus;
+import com.deliveryBoy.enums.RejectOrderReason;
+import com.deliveryBoy.request.OrderRequest;
+
+public interface OrderService {
+
+    List<OrderRequest> getTodayOrders();
+
+    List<OrderRequest> getOrdersByStatus(String status);
+
+    void acceptOrder(String orderId);
+
+    void rejectOrder(String orderId, RejectOrderReason reason);
+
+    void toggleAvailability(UUID deliveryBoyId, AvailabilityStatus status);
+
+    int getNewOrdersCount();
+
+    List<OrderRequest> getAllOrders();
+
+
+    OrderEntity saveOrder(OrderEntity order);
+
+	OrderEntity createOrder(OrderRequest orderRequest);
+
+	List<OrderRequest> canceledOrders();
+
+	void pickupOrder(String orderId);
+    
+}

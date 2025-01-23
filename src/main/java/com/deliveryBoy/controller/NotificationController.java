@@ -19,6 +19,7 @@
 //import com.deliveryBoy.service.OrderService;
 //import com.deliveryBoy.service.ProfileService;
 //
+//@CrossOrigin(origins = "*")
 //@RestController
 //@RequestMapping("/api/")
 //public class NotificationController {
