@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.solwyz</groupId>
-	<artifactId>DeliveryBoy</artifactId>
+	<artifactId>deliveryBoy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>deliveryBoy</name>
-	<description>Delivery boy APIs</description>
+	<description>centralLink project for admin</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -22,7 +22,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-<dependency>
+		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>1.70</version> <!-- Use the latest stable version -->
@@ -31,6 +31,11 @@
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
 			<version>1.70</version> <!-- Ensure this is the same version -->
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version> <!-- Use the latest stable version -->
 		</dependency>
 
 		<dependency>
@@ -99,11 +104,6 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>9.0.0</version>
 		</dependency>
-	<dependency>
-<groupId>io.jsonwebtoken</groupId>
-<artifactId>jjwt</artifactId>
-<version>0.12.6</version>
-</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -115,7 +115,11 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -191,8 +195,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
@@ -201,10 +203,6 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>central</id>
-			<url>https://repo.maven.apache.org/maven2</url>
 		</repository>
 		<repository>
 			<id>spring-snapshots</id>
