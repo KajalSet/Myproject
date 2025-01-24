@@ -1,49 +1,62 @@
 package com.deliveryBoy.auth;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.UUID;
 
-@Data
-@Getter
-@Setter
 public class AuthenticationResponse {
 
-	private String jwt;
+    private String jwt;
+    private String refreshToken;
+    private UUID id;
+    private String email;
+    private String mobileNumber;
 
-	private String refreshToken;
+    // Constructor
+    public AuthenticationResponse(String jwt, String refreshToken, UUID id, String email, String mobileNumber) {
+        this.jwt = jwt;
+        this.refreshToken = refreshToken;
+        this.id = id;
+        this.email = email;
+        this.mobileNumber = mobileNumber;
+    }
 
-	private String tokenType = "Bearer";
+    // Getters and Setters
+    public String getJwt() {
+        return jwt;
+    }
 
-	public AuthenticationResponse(String jwt, String refreshToken) {
-		super();
-		this.jwt = jwt;
-		this.refreshToken = refreshToken;
-	}
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+    }
 
-	public String getJwt() {
-		return jwt;
-	}
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
-	public void setJwt(String jwt) {
-		this.jwt = jwt;
-	}
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public String getTokenType() {
-		return tokenType;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setTokenType(String tokenType) {
-		this.tokenType = tokenType;
-	}
-	
-	
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
 }

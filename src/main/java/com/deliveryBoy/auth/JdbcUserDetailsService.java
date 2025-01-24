@@ -56,6 +56,9 @@ public class JdbcUserDetailsService implements UserDetailsService{
 		}
 		
 		CurrentUser currentUser = new CurrentUser(username, "", authorities);
+		
+		currentUser.setEmail(userEntity.get().getEmail());
+		currentUser.setMobileNumber(userEntity.get().getMobileNumber());
 
 		CopyPropertiesUtil.copyProperties(userEntity.get(), currentUser);
 

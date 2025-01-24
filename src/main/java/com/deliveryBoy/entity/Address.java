@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.deliveryBoy.auth.BaseEntity;
+
 import lombok.Builder;
 import lombok.Data;
 
