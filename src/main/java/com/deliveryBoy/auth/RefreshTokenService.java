@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.deliveryBoy.exception.TokenRefreshException;
+
 
 @Service
 public class RefreshTokenService {
@@ -40,6 +42,17 @@ public class RefreshTokenService {
 
 		refreshToken = refreshTokenRepository.save(refreshToken);
 		return refreshToken;
+	}
+
+	public RefreshToken verifyExpiration(RefreshToken token) {
+		if (token.getExpiryDate().compareTo(new Date()) < 0) {
+			refreshTokenRepository.delete(token);
+			throw new TokenRefreshException(token.getToken(),
+					"Refresh token was expired. Please make a new signin request");
+		}
+
+		return token;
+		
 	}
 	  
 	
