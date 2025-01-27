@@ -12,7 +12,7 @@ import com.deliveryBoy.repository.DeliveryBoyAvailabilityRepository;
 @Service
 public class DeliveryBoyAvailabilityService {
 
-    @Autowired
+	@Autowired
     private DeliveryBoyAvailabilityRepository availabilityRepository;
 
     public AvailabilityStatus getAvailabilityStatus(UUID deliveryBoyId) {
@@ -29,5 +29,14 @@ public class DeliveryBoyAvailabilityService {
         availability.setAvailabilityStatus(status);
 
         availabilityRepository.save(availability);
+    }
+
+    public void addDeliveryBoyAvailability(UUID deliveryBoyId, AvailabilityStatus availabilityStatus) {
+        DeliveryBoyAvailability availability = new DeliveryBoyAvailability();
+        availability.setDeliveryBoyId(deliveryBoyId);
+        availability.setAvailabilityStatus(availabilityStatus);
+
+        // Save the new availability record
+        availabilityRepository.save(availability); // Use the correct repository
     }
 }

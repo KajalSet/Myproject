@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliveryBoy.entity.DeliveryBoyAvailability;
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
 import com.deliveryBoy.enums.RejectOrderReason;
+import com.deliveryBoy.repository.DeliveryBoyAvailabilityRepository;
 import com.deliveryBoy.request.OrderRequest;
+import com.deliveryBoy.response.ApiResponse;
 import com.deliveryBoy.service.DeliveryBoyAvailabilityService;
 import com.deliveryBoy.service.HomeService;
 import com.deliveryBoy.service.OrderService;
@@ -39,54 +42,65 @@ public class HomeController {
     @Autowired
     private OrderService orderService;
     
+    @Autowired
+    private DeliveryBoyAvailabilityRepository availabilityRepository;
     
     @GetMapping("/today-orders")
-    public ResponseEntity<List<OrderRequest>> getTodayOrders() {
+    public ResponseEntity<ApiResponse<List<OrderRequest>>> getTodayOrders() {
         List<OrderRequest> orders = homeService.getTodayOrders();
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+        return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
-//    @GetMapping("/orders-by-status/{status}")
-//    public ResponseEntity<List<OrderRequest>> getOrdersByStatus(@PathVariable String status) {
-//        try {
-//            List<OrderRequest> orders = homeService.getOrdersByStatus(status);
-//            if (orders.isEmpty()) {
-//                return ResponseEntity.notFound().build(); // Return 404 if no orders are found
-//            }
-//            return ResponseEntity.ok(orders);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(null); // Handle invalid status
-//        }
-//    }
-
     @PutMapping("/accept-order/{orderId}")
-    public ResponseEntity<Void> acceptOrder(@PathVariable String orderId) {
+    public ResponseEntity<ApiResponse<Void>> acceptOrder(@PathVariable String orderId) {
         homeService.acceptOrder(orderId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, null));
     }
 
     @PutMapping("/reject-order/{orderId}")
-    public ResponseEntity<Void> rejectOrder(@PathVariable String orderId, @RequestParam RejectOrderReason reason) {
+    public ResponseEntity<ApiResponse<Void>> rejectOrder(@PathVariable String orderId, @RequestParam RejectOrderReason reason) {
         homeService.rejectOrder(orderId, reason);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, null));
     }
 
     @GetMapping("/{deliveryBoyId}/availability")
-    public AvailabilityStatus getAvailability(@PathVariable UUID deliveryBoyId) {
-        return availabilityService.getAvailabilityStatus(deliveryBoyId);
+    public ResponseEntity<ApiResponse<AvailabilityStatus>> getAvailability(@PathVariable UUID deliveryBoyId) {
+        AvailabilityStatus status = availabilityService.getAvailabilityStatus(deliveryBoyId);
+        return ResponseEntity.ok(new ApiResponse<>(true, status));
     }
+    
 
+    @PostMapping("/addAvailability")
+    public ResponseEntity<ApiResponse<DeliveryBoyAvailability>> addDeliveryBoyAvailability(@RequestBody DeliveryBoyAvailability availability) {
+        // Save the DeliveryBoyAvailability entity to the database
+        DeliveryBoyAvailability savedAvailability = availabilityRepository.save(availability);
+        // Return the response in the desired format
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(true, savedAvailability));
+    }
+    
+    
+    
     @PutMapping("/{deliveryBoyId}/availability")
-    public ResponseEntity<Void> toggleAvailability(@PathVariable UUID deliveryBoyId,
-                                                    @RequestBody AvailabilityRequest request) {
+    public ResponseEntity<ApiResponse<String>> toggleAvailability(@PathVariable UUID deliveryBoyId,
+                                                                  @RequestBody AvailabilityRequest request) {
+        
         availabilityService.toggleAvailability(deliveryBoyId, request.getAvailabilityStatus());
-        return ResponseEntity.ok().build();
+
+       
+        String responseMessage = "Availability status updated to " + request.getAvailabilityStatus();
+        return ResponseEntity.ok(new ApiResponse<>(true, responseMessage));
+    }
+    
+
+    @GetMapping("/allorders")
+    public ResponseEntity<ApiResponse<List<OrderEntity>>> getAllOrders() {
+        List<OrderEntity> orders = homeService.getAllOrders();
+        return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
     public static class AvailabilityRequest {
         private AvailabilityStatus availabilityStatus;
 
-        // Getters and setters
         public AvailabilityStatus getAvailabilityStatus() {
             return availabilityStatus;
         }
@@ -95,18 +109,15 @@ public class HomeController {
             this.availabilityStatus = availabilityStatus;
         }
     }
-
-//    @GetMapping("/new-orders-count")
-//    public ResponseEntity<Integer> getNewOrdersCount() {
-//        int newOrdersCount = homeService.getNewOrdersCount();
-//        return ResponseEntity.ok(newOrdersCount);
-//    }
-
-    @GetMapping("/allorders")
-    public ResponseEntity<List<OrderEntity>> getAllOrders() {
-        List<OrderEntity> orders = homeService.getAllOrders();
-        return ResponseEntity.ok(orders); // Return all orders with 200 OK
-    }
+    
+    
+    
+    
+//  @GetMapping("/new-orders-count")
+//  public ResponseEntity<Integer> getNewOrdersCount() {
+//      int newOrdersCount = homeService.getNewOrdersCount();
+//      return ResponseEntity.ok(newOrdersCount);
+//  }
 
 //    @PostMapping("/createOrders")
 //    public ResponseEntity<OrderEntity> saveOrder(@RequestBody OrderRequest orderRequest) {

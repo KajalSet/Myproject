@@ -17,10 +17,12 @@ import lombok.Data;
 @Table(name = "DeliveryBoyAvailability")
 public class DeliveryBoyAvailability {
 
-    @Id
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private UUID deliveryBoyId;  // Reference to delivery boy
+    private UUID deliveryBoyId; 
+    
     @Enumerated(EnumType.STRING)
     private AvailabilityStatus availabilityStatus;
 }
