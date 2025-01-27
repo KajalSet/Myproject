@@ -16,6 +16,7 @@ import com.deliveryBoy.enums.RejectOrderReason;
 import com.deliveryBoy.exception.OrderNotFoundException;
 import com.deliveryBoy.repository.OrderRepository;
 import com.deliveryBoy.request.OrderRequest;
+import com.deliveryBoy.response.OrderResponse;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -49,14 +50,18 @@ public class OrderServiceImpl implements OrderService {
     
     
     @Override
-    public List<OrderRequest> getTodayOrders() {
-        // Get today's date
+    public List<OrderResponse> getTodayOrders() {
         LocalDate today = LocalDate.now();
-        
-        // Find orders with today's date
-        List<OrderEntity> orders = orderRepository.findByOrderDate(today);  // Assuming 'findByOrderDate' exists in your repository
-        
-        return convertToOrderRequests(orders);  // Reuse your method to convert to OrderRequest
+        List<OrderEntity> orders = orderRepository.findByOrderDate(today);
+
+        return orders.stream()
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getId().toString())
+                        .date(order.getOrderDate().toString())  // Use order's date
+                        .store(order.getCustomerName())  // Assuming store is stored in customerName, modify accordingly
+                        .deliveryLocation(order.getDeliveryAddress())  // Assuming delivery address is the delivery location
+                        .build())
+                .collect(Collectors.toList());
     }
 
  
@@ -139,19 +144,33 @@ public class OrderServiceImpl implements OrderService {
     
     
     @Override
-    public List<OrderRequest> getAllOrders() {
-        List<OrderEntity> orders = orderRepository.findAll();  // Fetch all orders from the repository
-        return convertToOrderRequests(orders);  // Convert OrderEntity to OrderRequest
+    public List<OrderResponse> getAllOrders() {
+        List<OrderEntity> orders = orderRepository.findAll();
+
+        return orders.stream()
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getId().toString())
+                        .date(order.getOrderDate().toString())
+                        .store(order.getCustomerName())  // Modify as necessary
+                        .deliveryLocation(order.getDeliveryAddress())  // Modify as necessary
+                        .build())
+                .collect(Collectors.toList());
     }
     
+    
     @Override
-    public List<OrderRequest> canceledOrders() {
-        // Fetch orders where the status is either REJECTED or CANCELED
+    public List<OrderResponse> canceledOrders() {
         List<OrderEntity> orders = orderRepository.findByOrderstatusIn(
                 List.of(OrderStatus.REJECTED, OrderStatus.CANCELLED));
-        
-        // Convert OrderEntity to OrderRequest
-        return orderRequests(orders);
+
+        return orders.stream()
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getId().toString())
+                        .date(order.getOrderDate().toString())
+                        .store(order.getCustomerName())  // Modify as necessary
+                        .deliveryLocation(order.getDeliveryAddress())  // Modify as necessary
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public List<OrderRequest> orderRequests(List<OrderEntity> orders) {

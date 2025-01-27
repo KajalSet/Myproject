@@ -5,6 +5,7 @@ import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.RejectOrderReason;
 import com.deliveryBoy.request.OrderRequest;
 import com.deliveryBoy.response.ApiResponse;
+import com.deliveryBoy.response.OrderResponse;
 import com.deliveryBoy.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,20 +39,20 @@ public class OrderController {
     }
 
     @GetMapping("/today") //tested 
-    public ResponseEntity<ApiResponse<List<OrderRequest>>> getTodayOrders() {
-        List<OrderRequest> orders = orderService.getTodayOrders();
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getTodayOrders() {
+    	List<OrderResponse> orders=orderService.getTodayOrders();
         return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
     @GetMapping("/allOrder")
-    public ResponseEntity<ApiResponse<List<OrderRequest>>> getAllOrders() {
-        List<OrderRequest> orders = orderService.getAllOrders();
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getAllOrders() {
+    	List<OrderResponse> orders = orderService.getAllOrders();
         return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
     @GetMapping("/canceled-orders")
-    public ResponseEntity<ApiResponse<List<OrderRequest>>> canceledOrders() {
-        List<OrderRequest> orders = orderService.canceledOrders();
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> canceledOrders() {
+    	List<OrderResponse> orders = orderService.canceledOrders();
         return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 

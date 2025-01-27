@@ -8,10 +8,11 @@ import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
 import com.deliveryBoy.enums.RejectOrderReason;
 import com.deliveryBoy.request.OrderRequest;
+import com.deliveryBoy.response.OrderResponse;
 
 public interface OrderService {
 
-    List<OrderRequest> getTodayOrders();
+    List<OrderResponse> getTodayOrders();
 
     List<OrderRequest> getOrdersByStatus(String status);
 
@@ -23,14 +24,14 @@ public interface OrderService {
 
     int getNewOrdersCount();
 
-    List<OrderRequest> getAllOrders();
+    List<OrderResponse> getAllOrders();
 
 
     OrderEntity saveOrder(OrderEntity order);
 
 	OrderEntity createOrder(OrderRequest orderRequest);
 
-	List<OrderRequest> canceledOrders();
+	List<OrderResponse> canceledOrders();
 
 	void pickupOrder(String orderId);
     
