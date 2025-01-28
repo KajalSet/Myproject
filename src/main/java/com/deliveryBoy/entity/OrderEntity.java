@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
-import com.deliveryBoy.enums.RejectOrderReason;
+
 
 import lombok.Data;
 

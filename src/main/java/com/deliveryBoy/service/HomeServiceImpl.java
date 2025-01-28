@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
-import com.deliveryBoy.enums.RejectOrderReason;
+
 import com.deliveryBoy.repository.OrderRepository;
 import com.deliveryBoy.request.OrderRequest;
 

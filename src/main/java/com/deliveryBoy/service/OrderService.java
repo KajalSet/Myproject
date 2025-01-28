@@ -12,7 +12,7 @@ import com.deliveryBoy.response.OrderResponse;
 
 public interface OrderService {
 
-    List<OrderResponse> getTodayOrders();
+//    List<OrderResponse> getTodayOrders();
 
     //List<OrderRequest> getOrdersByStatus(String status);
 
@@ -28,14 +28,14 @@ public interface OrderService {
 
     int getNewOrdersCount();
 
-    List<OrderResponse> getAllOrders();
+ List<OrderResponse> getAllOrders();
 
 
     OrderEntity saveOrder(OrderEntity order);
 
 	OrderEntity createOrder(OrderRequest orderRequest);
 
-	List<OrderResponse> canceledOrders();
+//	List<OrderResponse> canceledOrders();
 
 	List<OrderRequest> getTodayOrders(String status);
 

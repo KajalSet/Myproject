@@ -38,9 +38,24 @@ public class OrderController {
         return ResponseEntity.status(201).body(new ApiResponse<>(true, createdOrderRequest));  // Return the created order in response
     }
 
-    @GetMapping("/today") //tested 
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getTodayOrders() {
-    	List<OrderResponse> orders=orderService.getTodayOrders();
+//    @GetMapping("/today") //tested 
+//    public ResponseEntity<ApiResponse<List<OrderResponse>>> getTodayOrders() {
+//    	List<OrderResponse> orders=orderService.getTodayOrders();
+//        return ResponseEntity.ok(new ApiResponse<>(true, orders));
+//    }
+    
+    
+    @GetMapping("/today-orders")
+    public ResponseEntity<ApiResponse<List<OrderRequest>>> getTodayOrders(
+            @RequestParam(defaultValue = "ACCEPTED") String status) {
+        List<OrderRequest> orders = orderService.getTodayOrders(status);
+        return ResponseEntity.ok(new ApiResponse<>(true, orders));
+    }
+    
+    @GetMapping("/canceledOrder")
+    public ResponseEntity<ApiResponse<List<OrderRequest>>> getCanceledOrders(
+            @RequestParam(defaultValue = "CANCELLED") String status) {
+        List<OrderRequest> orders = orderService.getCanceledOrders(status);
         return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
@@ -50,11 +65,11 @@ public class OrderController {
         return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
-    @GetMapping("/canceled-orders")
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> canceledOrders() {
-    	List<OrderResponse> orders = orderService.canceledOrders();
-        return ResponseEntity.ok(new ApiResponse<>(true, orders));
-    }
+//    @GetMapping("/canceled-orders")
+//    public ResponseEntity<ApiResponse<List<OrderResponse>>> canceledOrders() {
+//    	List<OrderResponse> orders = orderService.canceledOrders();
+//        return ResponseEntity.ok(new ApiResponse<>(true, orders));
+//    }
 
 //    @PostMapping("/{orderId}/pickup")
 //    public ResponseEntity<ApiResponse<String>> pickupOrder(@PathVariable String orderId) {

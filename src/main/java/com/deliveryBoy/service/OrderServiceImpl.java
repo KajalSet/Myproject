@@ -271,5 +271,19 @@ public class OrderServiceImpl implements OrderService {
 	                     .build())
 	             .collect(Collectors.toList());
 	 }
+
+
+//	@Override
+//	public List<OrderResponse> getTodayOrders() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//
+//	@Override
+//	public List<OrderResponse> canceledOrders() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
     
 }

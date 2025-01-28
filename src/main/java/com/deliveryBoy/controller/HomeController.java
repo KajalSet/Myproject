@@ -21,7 +21,7 @@ import com.deliveryBoy.entity.DeliveryBoyAvailability;
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
-import com.deliveryBoy.enums.RejectOrderReason;
+
 import com.deliveryBoy.repository.DeliveryBoyAvailabilityRepository;
 import com.deliveryBoy.request.OrderRequest;
 import com.deliveryBoy.response.ApiResponse;
