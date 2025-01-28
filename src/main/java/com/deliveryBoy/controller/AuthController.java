@@ -1,10 +1,13 @@
 package com.deliveryBoy.controller;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,7 @@ import com.deliveryBoy.auth.AuthenticationResponse;
 import com.deliveryBoy.auth.CurrentUser;
 import com.deliveryBoy.auth.JdbcUserDetailsService;
 import com.deliveryBoy.auth.JwtUtil;
+import com.deliveryBoy.auth.MessageResponse;
 import com.deliveryBoy.auth.RefreshToken;
 import com.deliveryBoy.auth.RefreshTokenService;
 import com.deliveryBoy.auth.User;
@@ -149,6 +153,23 @@ public class AuthController {
 	}
 	
 	
+	@PostMapping("/signout")
+	public ResponseEntity<String> signOut() {
+		// Optionally, you could perform any custom logic (e.g., blacklisting JWT tokens
+		// if necessary)
+ 
+		// Clear the security context (invalidate the current session/token)
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			// Perform any required cleanup (e.g., logging out the user)
+			SecurityContextHolder.clearContext(); // Clears the authentication context
+		}
+ 
+		// Return a success message
+		return ResponseEntity.ok("You have been signed out successfully.");
+	}
+	
+	
 
 //	@GetMapping("/resendVerifyEmail")
 //	public ResponseEntity<?> resendVerifyEmail(@RequestParam("email") String email) {
@@ -197,7 +218,7 @@ public class AuthController {
 //	}
 
 	
-//
+
 //	@PostMapping("/signout")
 //	public ResponseEntity<?> logoutUser() {
 //		CurrentUser userDetails = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

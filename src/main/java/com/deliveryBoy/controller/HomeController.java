@@ -2,6 +2,7 @@ package com.deliveryBoy.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliveryBoy.auth.User;
+import com.deliveryBoy.auth.UserRepo;
 import com.deliveryBoy.entity.DeliveryBoyAvailability;
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.enums.AvailabilityStatus;
@@ -28,6 +31,7 @@ import com.deliveryBoy.response.ApiResponse;
 import com.deliveryBoy.service.DeliveryBoyAvailabilityService;
 import com.deliveryBoy.service.HomeService;
 import com.deliveryBoy.service.OrderService;
+
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -44,6 +48,10 @@ public class HomeController {
     
     @Autowired
     private DeliveryBoyAvailabilityRepository availabilityRepository;
+    
+    @Autowired
+    UserRepo userRepo;
+    
     
     @GetMapping("/today-orders")
     public ResponseEntity<ApiResponse<List<OrderRequest>>> getTodayOrders() {
@@ -109,6 +117,23 @@ public class HomeController {
             this.availabilityStatus = availabilityStatus;
         }
     }
+    
+    
+    
+    
+    @GetMapping("/user/address")
+    public ResponseEntity<?> getUserDeliveryAddress(@RequestParam("userId") UUID userId) {
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isPresent()) {
+            String deliveryAddress = user.get().getCurrentLocation();  // Fetch delivery address (currentLocation)
+            return ResponseEntity.ok(new ApiResponse<>(true,deliveryAddress));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body(new ApiResponse<>(false, "User not found"));
+        }
+    }
+    
+    
     
     
     

@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +57,11 @@ public class RefreshTokenService {
 		
 	}
 	  
-	
+	@Transactional
+	public int deleteByUserId(UUID userId) {
+		return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
+	}
+
 	
 	
 	
