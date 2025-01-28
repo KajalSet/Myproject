@@ -21,6 +21,14 @@ import com.deliveryBoy.response.OrderResponse;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+	
+	
+	
+	
+	
+	
+	
+	
     @Autowired
     private OrderRepository orderRepository;
     
@@ -49,21 +57,75 @@ public class OrderServiceImpl implements OrderService {
     }
     
     
-//    @Override
-//    public List<OrderResponse> getTodayOrders() {
-//        LocalDate today = LocalDate.now();
-//        List<OrderEntity> orders = orderRepository.findByOrderDate(today);
-//
-//        return orders.stream()
-//                .map(order -> OrderResponse.builder()
-//                        .orderId(order.getId().toString())
-//                        .date(order.getOrderDate().toString())  // Use order's date
-//                        .store(order.getCustomerName())  // Assuming store is stored in customerName, modify accordingly
-//                        .deliveryLocation(order.getDeliveryAddress())  // Assuming delivery address is the delivery location
-//                        .build())
-//                .collect(Collectors.toList());
-//    }
+    
+    
+    @Override
+    public List<OrderResponse> getAllOrders() {
+        List<OrderEntity> orders = orderRepository.findAll();
 
+        return orders.stream()
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getId().toString())
+                        .date(order.getOrderDate().toString())
+                        .store(order.getCustomerName())
+                        .deliveryLocation(order.getDeliveryAddress())
+                        .orderStatus(order.getOrderstatus()) // Include orderStatus
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderResponse> canceledOrders() {
+        List<OrderEntity> orders = orderRepository.findByOrderstatusIn(
+                List.of(OrderStatus.REJECTED, OrderStatus.CANCELLED));
+
+        return orders.stream()
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getId().toString())
+                        .date(order.getOrderDate().toString())
+                        .store(order.getCustomerName())
+                        .deliveryLocation(order.getDeliveryAddress())
+                        .orderStatus(order.getOrderstatus()) // Include orderStatus
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderResponse> getTodayOrders() {
+        LocalDate today = LocalDate.now();
+        List<OrderEntity> orders = orderRepository.findByOrderDate(today)
+                .stream()
+                .filter(order -> order.getOrderstatus() == OrderStatus.ACCEPTED) // Filter only accepted orders
+                .collect(Collectors.toList());
+
+        return orders.stream()
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getId().toString())
+                        .date(order.getOrderDate().toString())
+                        .store(order.getCustomerName())
+                        .deliveryLocation(order.getDeliveryAddress())
+                        .orderStatus(order.getOrderstatus()) // Include orderStatus
+                        .build())
+                .collect(Collectors.toList());
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
  
     public List<OrderRequest> convertToOrderRequests(List<OrderEntity> orders) {
         return orders.stream()
@@ -114,37 +176,7 @@ public class OrderServiceImpl implements OrderService {
     }
     
     
-    
-    @Override
-    public List<OrderResponse> getAllOrders() {
-        List<OrderEntity> orders = orderRepository.findAll();
-
-        return orders.stream()
-                .map(order -> OrderResponse.builder()
-                        .orderId(order.getId().toString())
-                        .date(order.getOrderDate().toString())
-                        .store(order.getCustomerName())  // Modify as necessary
-                        .deliveryLocation(order.getDeliveryAddress())  // Modify as necessary
-                        .build())
-                .collect(Collectors.toList());
-    }
-    
-    
-//    @Override
-//    public List<OrderResponse> canceledOrders() {
-//        List<OrderEntity> orders = orderRepository.findByOrderstatusIn(
-//                List.of(OrderStatus.REJECTED, OrderStatus.CANCELLED));
-//
-//        return orders.stream()
-//                .map(order -> OrderResponse.builder()
-//                        .orderId(order.getId().toString())
-//                        .date(order.getOrderDate().toString())
-//                        .store(order.getCustomerName())  // Modify as necessary
-//                        .deliveryLocation(order.getDeliveryAddress())  // Modify as necessary
-//                        .build())
-//                .collect(Collectors.toList());
-//    }
-
+   
     public List<OrderRequest> orderRequests(List<OrderEntity> orders) {
         return orders.stream()
                 .map(order -> OrderRequest.builder()
@@ -175,21 +207,21 @@ public class OrderServiceImpl implements OrderService {
 //    }
 //    
 
-    public void rejectOrder(String orderId, String reason) {
-        // Find the order by ID
-        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
-        
-        // Set order status to REJECTED and update timestamp
-        orderEntity.setOrderstatus(OrderStatus.REJECTED);
-        orderEntity.setUpdatedAt(LocalDateTime.now());
-        
-        // Set the rejection reason (which is of type RejectOrderReason)
-        orderEntity.setRejection(reason);  // No need to call `name()`
-        
-        // Save the updated order entity
-        orderRepository.save(orderEntity);
-    }
+//    public void rejectOrder(String orderId, String reason) {
+//        // Find the order by ID
+//        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+//                .orElseThrow(() -> new OrderNotFoundException(orderId));
+//        
+//        // Set order status to REJECTED and update timestamp
+//        orderEntity.setOrderstatus(OrderStatus.REJECTED);
+//        orderEntity.setUpdatedAt(LocalDateTime.now());
+//        
+//        // Set the rejection reason (which is of type RejectOrderReason)
+//        orderEntity.setRejection(reason);  // No need to call `name()`
+//        
+//        // Save the updated order entity
+//        orderRepository.save(orderEntity);
+//    }
  
     
 //    public List<OrderRequest> getRejectedOrCanceledOrders() {
@@ -214,76 +246,33 @@ public class OrderServiceImpl implements OrderService {
 //
 //        orderRepository.save(deliveryBoy);
 //    }
-    @Override
-	 public List<OrderRequest> getTodayOrders(String status) {
-	     // Convert the provided status to the OrderStatus enum
-	     OrderStatus orderStatus;
-	     try {
-	         orderStatus = OrderStatus.valueOf(status.toUpperCase());
-	     } catch (IllegalArgumentException e) {
-	         throw new RuntimeException("Invalid order status: " + status);
-	     }
-
-	     // Fetch orders by status
-	     List<OrderEntity> orders = orderRepository.findOrdersByStatus(orderStatus);
-
-	     if (orders.isEmpty()) {
-	         throw new RuntimeException("No orders found with status: " + status);
-	     }
-
-	     // Map the orders to OrderRequest
-	     return orders.stream()
-	             .map(order -> OrderRequest.builder()
-	                     .orderId(order.getId().toString())
-	                     .customerName(order.getCustomerName())
-	                     .deliveryAddress(order.getDeliveryAddress())
-	                     .contactNumber(order.getContactNumber())
-	                     .orderstatus(order.getOrderstatus().toString())
-	                     .build())
-	             .collect(Collectors.toList());
-	 }
-//getCanceledOrders
-	 @Override
-	 public List<OrderRequest> getCanceledOrders(String status) {
-	     // Convert the provided status to the OrderStatus enum
-	     OrderStatus orderStatus;
-	     try {
-	         orderStatus = OrderStatus.valueOf(status.toUpperCase());
-	     } catch (IllegalArgumentException e) {
-	         throw new RuntimeException("Invalid order status: " + status);
-	     }
-
-	     // Fetch orders by status
-	     List<OrderEntity> orders = orderRepository.findOrdersByStatus(orderStatus);
-
-	     if (orders.isEmpty()) {
-	         throw new RuntimeException("No orders found with status: " + status);
-	     }
-
-	     // Map the orders to OrderRequest
-	     return orders.stream()
-	             .map(order -> OrderRequest.builder()
-	                     .orderId(order.getId().toString())
-	                     .customerName(order.getCustomerName())
-	                     .deliveryAddress(order.getDeliveryAddress())
-	                     .contactNumber(order.getContactNumber())
-	                     .orderstatus(order.getOrderstatus().toString())
-	                     .build())
-	             .collect(Collectors.toList());
-	 }
-
-
-//	@Override
-//	public List<OrderResponse> getTodayOrders() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+//    @Override
+//	 public List<OrderRequest> getTodayOrders(String status) {
+//	     // Convert the provided status to the OrderStatus enum
+//	     OrderStatus orderStatus;
+//	     try {
+//	         orderStatus = OrderStatus.valueOf(status.toUpperCase());
+//	     } catch (IllegalArgumentException e) {
+//	         throw new RuntimeException("Invalid order status: " + status);
+//	     }
 //
+//	     // Fetch orders by status
+//	     List<OrderEntity> orders = orderRepository.findOrdersByStatus(orderStatus);
 //
-//	@Override
-//	public List<OrderResponse> canceledOrders() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-    
+//	     if (orders.isEmpty()) {
+//	         throw new RuntimeException("No orders found with status: " + status);
+//	     }
+//
+//	     // Map the orders to OrderRequest
+//	     return orders.stream()
+//	             .map(order -> OrderRequest.builder()
+//	                     .orderId(order.getId().toString())
+//	                     .customerName(order.getCustomerName())
+//	                     .deliveryAddress(order.getDeliveryAddress())
+//	                     .contactNumber(order.getContactNumber())
+//	                     .orderstatus(order.getOrderstatus().toString())
+//	                     .build())
+//	             .collect(Collectors.toList());
+//	 }
+
 }
