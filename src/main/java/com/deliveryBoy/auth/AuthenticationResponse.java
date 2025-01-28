@@ -4,19 +4,20 @@ import java.util.UUID;
 
 public class AuthenticationResponse {
 
-    private String jwt;
+	private String jwt;
     private String refreshToken;
     private UUID id;
     private String email;
     private String mobileNumber;
+    private String currentLocation;
 
     // Constructor
-    public AuthenticationResponse(String jwt, String refreshToken, UUID id, String email, String mobileNumber) {
+    public AuthenticationResponse(String jwt, String refreshToken, UUID id, String email, String mobileNumber, String currentLocation) {
         this.jwt = jwt;
         this.refreshToken = refreshToken;
         this.id = id;
         this.email = email;
-        this.mobileNumber = mobileNumber;
+        this.mobileNumber = mobileNumber;this.currentLocation = currentLocation;
     }
 
     // Getters and Setters
@@ -59,4 +60,12 @@ public class AuthenticationResponse {
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
+	public String getCurrentLocation() {
+		return currentLocation;
+
+	}
+
+	public void setCurrentLocation(String currentLocation) {
+		this.currentLocation = currentLocation;
+	}
 }

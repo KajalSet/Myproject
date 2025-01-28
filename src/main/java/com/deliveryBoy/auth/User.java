@@ -35,6 +35,9 @@ public class User extends BaseEntity {
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
+	
+	
+	private String currentLocation;
 
 	@Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private boolean deleteAllowed = true;
@@ -193,4 +196,13 @@ public class User extends BaseEntity {
 	public void setEmailTokenExpiryDate(Date emailTokenExpiryDate) {
 		this.emailTokenExpiryDate = emailTokenExpiryDate;
 	}
+	
+	public String getCurrentLocation() {
+		return currentLocation;
+	}
+
+	public void setCurrentLocation(String currentLocation) {
+		this.currentLocation = currentLocation;
+	}
+	
 }

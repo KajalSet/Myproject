@@ -73,7 +73,8 @@ public class AuthController {
 			jwt = jwtTokenUtil.generateToken(userDetails);
 			AuthenticationResponse response = new AuthenticationResponse(jwt, refreshToken.getToken() , userDetails.getId(),  // Add ID here
 		            userDetails.getEmail(), 
-		            userDetails.getMobileNumber());
+		            userDetails.getMobileNumber(),
+		            userDetails.getCurrentLocation()); 
 
 			
 			return ResponseEntity.ok(response);
@@ -118,7 +119,7 @@ public class AuthController {
 			jwt = jwtTokenUtil.generateToken(userDetails);
 			AuthenticationResponse response = new AuthenticationResponse(jwt, refreshToken.getToken(), userDetails.getId(),  // Add ID here
 		            userDetails.getEmail(), 
-		            userDetails.getMobileNumber());
+		            userDetails.getMobileNumber(),userDetails.getCurrentLocation());
 
 			return ResponseEntity.ok(response);
 

@@ -55,11 +55,7 @@ public class OrderController {
         return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
-//    @PostMapping("/{orderId}/pickup")
-//    public ResponseEntity<ApiResponse<String>> pickupOrder(@PathVariable String orderId) {
-//        orderService.pickupOrder(orderId);
-//        return ResponseEntity.ok(new ApiResponse<>(true, "Order picked up successfully"));
-//    }
+
 
     @GetMapping("/status/{status}")
     public ResponseEntity<ApiResponse<List<OrderRequest>>> getOrdersByStatus(@PathVariable String status) {
@@ -92,9 +88,7 @@ public class OrderController {
 //        return ResponseEntity.ok(new ApiResponse<>(true, count));
 //    }
 	
-//	 @Autowired
-//	    private OrderService orderService;
-//	    
+
 //	    
 //	    @PostMapping("/create") //tested 
 //	    public ResponseEntity<ApiResponse<OrderRequest>> createOrder(@RequestBody OrderRequest orderRequest) {

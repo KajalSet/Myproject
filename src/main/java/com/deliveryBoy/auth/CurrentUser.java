@@ -24,6 +24,16 @@ public class CurrentUser extends User {
 	private String email;
 	private String MobileNumber;
 	
+	private String currentLocation;  
+
+    public String getCurrentLocation() {
+        return currentLocation;  
+    }
+
+    public void setCurrentLocation(String currentLocation) {
+        this.currentLocation = currentLocation;  
+    }
+	
 	
 	public UUID getId() {
 		return id;
