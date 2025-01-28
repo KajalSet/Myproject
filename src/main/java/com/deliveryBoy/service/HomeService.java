@@ -16,7 +16,7 @@ public interface HomeService {
 
     void acceptOrder(String orderId);
 
-    void rejectOrder(String orderId, RejectOrderReason reason);
+    
 
     void toggleAvailability(UUID deliveryBoyId, AvailabilityStatus status); // Add this line
 
@@ -26,5 +26,7 @@ public interface HomeService {
 
     // Other methods like saving an order etc.
     OrderEntity saveOrder(OrderEntity order); // Changed to OrderEntity
+
+	void rejectOrder(String orderId, String reason);
 
 }

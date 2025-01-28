@@ -58,7 +58,7 @@ public class HomeController {
     }
 
     @PutMapping("/reject-order/{orderId}")
-    public ResponseEntity<ApiResponse<Void>> rejectOrder(@PathVariable String orderId, @RequestParam RejectOrderReason reason) {
+    public ResponseEntity<ApiResponse<Void>> rejectOrder(@PathVariable String orderId, @RequestParam String reason) {
         homeService.rejectOrder(orderId, reason);
         return ResponseEntity.ok(new ApiResponse<>(true, null));
     }

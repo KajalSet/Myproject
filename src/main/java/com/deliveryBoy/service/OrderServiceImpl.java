@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
-import com.deliveryBoy.enums.RejectOrderReason;
+
 import com.deliveryBoy.exception.OrderNotFoundException;
 import com.deliveryBoy.repository.OrderRepository;
 import com.deliveryBoy.request.OrderRequest;
@@ -49,20 +49,20 @@ public class OrderServiceImpl implements OrderService {
     }
     
     
-    @Override
-    public List<OrderResponse> getTodayOrders() {
-        LocalDate today = LocalDate.now();
-        List<OrderEntity> orders = orderRepository.findByOrderDate(today);
-
-        return orders.stream()
-                .map(order -> OrderResponse.builder()
-                        .orderId(order.getId().toString())
-                        .date(order.getOrderDate().toString())  // Use order's date
-                        .store(order.getCustomerName())  // Assuming store is stored in customerName, modify accordingly
-                        .deliveryLocation(order.getDeliveryAddress())  // Assuming delivery address is the delivery location
-                        .build())
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<OrderResponse> getTodayOrders() {
+//        LocalDate today = LocalDate.now();
+//        List<OrderEntity> orders = orderRepository.findByOrderDate(today);
+//
+//        return orders.stream()
+//                .map(order -> OrderResponse.builder()
+//                        .orderId(order.getId().toString())
+//                        .date(order.getOrderDate().toString())  // Use order's date
+//                        .store(order.getCustomerName())  // Assuming store is stored in customerName, modify accordingly
+//                        .deliveryLocation(order.getDeliveryAddress())  // Assuming delivery address is the delivery location
+//                        .build())
+//                .collect(Collectors.toList());
+//    }
 
  
     public List<OrderRequest> convertToOrderRequests(List<OrderEntity> orders) {
@@ -99,35 +99,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(orderEntity);
     }
 
-    public void rejectOrder(String orderId, RejectOrderReason reason) {
-        // Find the order by ID
-        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
-        
-        // Set order status to REJECTED and update timestamp
-        orderEntity.setOrderstatus(OrderStatus.REJECTED);
-        orderEntity.setUpdatedAt(LocalDateTime.now());
-        
-        // Set the rejection reason (which is of type RejectOrderReason)
-        orderEntity.setRejection(reason);  // No need to call `name()`
-        
-        // Save the updated order entity
-        orderRepository.save(orderEntity);
-    }
-
-    @Override
-    public void toggleAvailability(UUID deliveryBoyId, AvailabilityStatus status) {
-        OrderEntity deliveryBoy = orderRepository.findById(deliveryBoyId)
-                .orElseThrow(() -> new RuntimeException("Delivery boy not found"));
-
-        if (deliveryBoy.getAvailabilityStatus() == null) {
-            deliveryBoy.setAvailabilityStatus(AvailabilityStatus.OFFLINE);
-        } else {
-            deliveryBoy.setAvailabilityStatus(status);
-        }
-
-        orderRepository.save(deliveryBoy);
-    }
+    
 
     @Override
     public int getNewOrdersCount() {
@@ -158,20 +130,20 @@ public class OrderServiceImpl implements OrderService {
     }
     
     
-    @Override
-    public List<OrderResponse> canceledOrders() {
-        List<OrderEntity> orders = orderRepository.findByOrderstatusIn(
-                List.of(OrderStatus.REJECTED, OrderStatus.CANCELLED));
-
-        return orders.stream()
-                .map(order -> OrderResponse.builder()
-                        .orderId(order.getId().toString())
-                        .date(order.getOrderDate().toString())
-                        .store(order.getCustomerName())  // Modify as necessary
-                        .deliveryLocation(order.getDeliveryAddress())  // Modify as necessary
-                        .build())
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<OrderResponse> canceledOrders() {
+//        List<OrderEntity> orders = orderRepository.findByOrderstatusIn(
+//                List.of(OrderStatus.REJECTED, OrderStatus.CANCELLED));
+//
+//        return orders.stream()
+//                .map(order -> OrderResponse.builder()
+//                        .orderId(order.getId().toString())
+//                        .date(order.getOrderDate().toString())
+//                        .store(order.getCustomerName())  // Modify as necessary
+//                        .deliveryLocation(order.getDeliveryAddress())  // Modify as necessary
+//                        .build())
+//                .collect(Collectors.toList());
+//    }
 
     public List<OrderRequest> orderRequests(List<OrderEntity> orders) {
         return orders.stream()
@@ -186,23 +158,39 @@ public class OrderServiceImpl implements OrderService {
     }
     
     
-    
-    @Override
-    public void pickupOrder(String orderId) {
+//    
+//    @Override
+//    public void pickupOrder(String orderId) {
+//        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+//                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + orderId));
+//
+//        if (orderEntity.getOrderstatus() == OrderStatus.PICKED_UP) {
+//            throw new RuntimeException("Order is already picked up");
+//        }
+//
+//        orderEntity.setOrderstatus(OrderStatus.PICKED_UP);
+//        orderEntity.setUpdatedAt(LocalDateTime.now());
+//
+//        orderRepository.save(orderEntity);
+//    }
+//    
+
+    public void rejectOrder(String orderId, String reason) {
+        // Find the order by ID
         OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
-                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + orderId));
-
-        if (orderEntity.getOrderstatus() == OrderStatus.PICKED_UP) {
-            throw new RuntimeException("Order is already picked up");
-        }
-
-        orderEntity.setOrderstatus(OrderStatus.PICKED_UP);
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+        
+        // Set order status to REJECTED and update timestamp
+        orderEntity.setOrderstatus(OrderStatus.REJECTED);
         orderEntity.setUpdatedAt(LocalDateTime.now());
-
+        
+        // Set the rejection reason (which is of type RejectOrderReason)
+        orderEntity.setRejection(reason);  // No need to call `name()`
+        
+        // Save the updated order entity
         orderRepository.save(orderEntity);
     }
-    
-    
+ 
     
 //    public List<OrderRequest> getRejectedOrCanceledOrders() {
 //        // Fetch orders where the status is either REJECTED or CANCELED
@@ -211,4 +199,77 @@ public class OrderServiceImpl implements OrderService {
 //        
 //        return convertToOrderRequests(orders);  // Convert OrderEntity to OrderRequest
 //    }
+    
+    
+//    @Override
+//    public void toggleAvailability(UUID deliveryBoyId, AvailabilityStatus status) {
+//        OrderEntity deliveryBoy = orderRepository.findById(deliveryBoyId)
+//                .orElseThrow(() -> new RuntimeException("Delivery boy not found"));
+//
+//        if (deliveryBoy.getAvailabilityStatus() == null) {
+//            deliveryBoy.setAvailabilityStatus(AvailabilityStatus.OFFLINE);
+//        } else {
+//            deliveryBoy.setAvailabilityStatus(status);
+//        }
+//
+//        orderRepository.save(deliveryBoy);
+//    }
+    @Override
+	 public List<OrderRequest> getTodayOrders(String status) {
+	     // Convert the provided status to the OrderStatus enum
+	     OrderStatus orderStatus;
+	     try {
+	         orderStatus = OrderStatus.valueOf(status.toUpperCase());
+	     } catch (IllegalArgumentException e) {
+	         throw new RuntimeException("Invalid order status: " + status);
+	     }
+
+	     // Fetch orders by status
+	     List<OrderEntity> orders = orderRepository.findOrdersByStatus(orderStatus);
+
+	     if (orders.isEmpty()) {
+	         throw new RuntimeException("No orders found with status: " + status);
+	     }
+
+	     // Map the orders to OrderRequest
+	     return orders.stream()
+	             .map(order -> OrderRequest.builder()
+	                     .orderId(order.getId().toString())
+	                     .customerName(order.getCustomerName())
+	                     .deliveryAddress(order.getDeliveryAddress())
+	                     .contactNumber(order.getContactNumber())
+	                     .orderstatus(order.getOrderstatus().toString())
+	                     .build())
+	             .collect(Collectors.toList());
+	 }
+//getCanceledOrders
+	 @Override
+	 public List<OrderRequest> getCanceledOrders(String status) {
+	     // Convert the provided status to the OrderStatus enum
+	     OrderStatus orderStatus;
+	     try {
+	         orderStatus = OrderStatus.valueOf(status.toUpperCase());
+	     } catch (IllegalArgumentException e) {
+	         throw new RuntimeException("Invalid order status: " + status);
+	     }
+
+	     // Fetch orders by status
+	     List<OrderEntity> orders = orderRepository.findOrdersByStatus(orderStatus);
+
+	     if (orders.isEmpty()) {
+	         throw new RuntimeException("No orders found with status: " + status);
+	     }
+
+	     // Map the orders to OrderRequest
+	     return orders.stream()
+	             .map(order -> OrderRequest.builder()
+	                     .orderId(order.getId().toString())
+	                     .customerName(order.getCustomerName())
+	                     .deliveryAddress(order.getDeliveryAddress())
+	                     .contactNumber(order.getContactNumber())
+	                     .orderstatus(order.getOrderstatus().toString())
+	                     .build())
+	             .collect(Collectors.toList());
+	 }
+    
 }

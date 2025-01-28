@@ -2,7 +2,7 @@ package com.deliveryBoy.controller;
 
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.enums.AvailabilityStatus;
-import com.deliveryBoy.enums.RejectOrderReason;
+
 import com.deliveryBoy.request.OrderRequest;
 import com.deliveryBoy.response.ApiResponse;
 import com.deliveryBoy.response.OrderResponse;
@@ -56,11 +56,11 @@ public class OrderController {
         return ResponseEntity.ok(new ApiResponse<>(true, orders));
     }
 
-    @PostMapping("/{orderId}/pickup")
-    public ResponseEntity<ApiResponse<String>> pickupOrder(@PathVariable String orderId) {
-        orderService.pickupOrder(orderId);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Order picked up successfully"));
-    }
+//    @PostMapping("/{orderId}/pickup")
+//    public ResponseEntity<ApiResponse<String>> pickupOrder(@PathVariable String orderId) {
+//        orderService.pickupOrder(orderId);
+//        return ResponseEntity.ok(new ApiResponse<>(true, "Order picked up successfully"));
+//    }
 
     @GetMapping("/status/{status}") //tested 
     public ResponseEntity<ApiResponse<List<OrderRequest>>> getOrdersByStatus(@PathVariable String status) {
@@ -74,19 +74,19 @@ public class OrderController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Order accepted successfully"));
     }
 
-    @PostMapping("/{orderId}/reject")
-    public ResponseEntity<ApiResponse<String>> rejectOrder(@PathVariable String orderId, 
-                                                           @RequestParam RejectOrderReason reason) {
-        orderService.rejectOrder(orderId, reason);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Order rejected successfully"));
-    }
-
-    @PostMapping("/{deliveryBoyId}/toggle-availability")
-    public ResponseEntity<ApiResponse<String>> toggleAvailability(@PathVariable UUID deliveryBoyId, 
-                                                                  @RequestParam AvailabilityStatus status) {
-        orderService.toggleAvailability(deliveryBoyId, status);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Availability status updated"));
-    }
+//    @PostMapping("/{orderId}/reject")
+//    public ResponseEntity<ApiResponse<String>> rejectOrder(@PathVariable String orderId, 
+//                                                           @RequestParam RejectOrderReason reason) {
+//        orderService.rejectOrder(orderId, reason);
+//        return ResponseEntity.ok(new ApiResponse<>(true, "Order rejected successfully"));
+//    }
+//
+//    @PostMapping("/{deliveryBoyId}/toggle-availability")
+//    public ResponseEntity<ApiResponse<String>> toggleAvailability(@PathVariable UUID deliveryBoyId, 
+//                                                                  @RequestParam AvailabilityStatus status) {
+//        orderService.toggleAvailability(deliveryBoyId, status);
+//        return ResponseEntity.ok(new ApiResponse<>(true, "Availability status updated"));
+//    }
 
     @GetMapping("/new/count")
     public ResponseEntity<ApiResponse<Integer>> getNewOrdersCount() {

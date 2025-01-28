@@ -39,8 +39,8 @@ public class OrderEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderstatus;  // You already have OrderStatus here
 
-    @Enumerated(EnumType.STRING)
-    private RejectOrderReason rejection;
+   
+    private String rejection;
 
     @Enumerated(EnumType.STRING)
     private AvailabilityStatus availabilityStatus;

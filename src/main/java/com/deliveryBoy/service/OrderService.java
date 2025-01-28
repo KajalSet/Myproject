@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
-import com.deliveryBoy.enums.RejectOrderReason;
+
 import com.deliveryBoy.request.OrderRequest;
 import com.deliveryBoy.response.OrderResponse;
 
@@ -14,13 +14,17 @@ public interface OrderService {
 
     List<OrderResponse> getTodayOrders();
 
-    List<OrderRequest> getOrdersByStatus(String status);
+    //List<OrderRequest> getOrdersByStatus(String status);
 
     void acceptOrder(String orderId);
+    
+    List<OrderRequest> getCanceledOrders(String status); 
+    List<OrderRequest> getOrdersByStatus(String status);
+    
 
-    void rejectOrder(String orderId, RejectOrderReason reason);
+//    void rejectOrder(String orderId, RejectOrderReason reason);
 
-    void toggleAvailability(UUID deliveryBoyId, AvailabilityStatus status);
+//    void toggleAvailability(UUID deliveryBoyId, AvailabilityStatus status);
 
     int getNewOrdersCount();
 
@@ -33,6 +37,8 @@ public interface OrderService {
 
 	List<OrderResponse> canceledOrders();
 
-	void pickupOrder(String orderId);
+	List<OrderRequest> getTodayOrders(String status);
+
+//	void pickupOrder(String orderId);
     
 }
