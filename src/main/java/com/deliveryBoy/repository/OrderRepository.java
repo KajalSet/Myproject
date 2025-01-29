@@ -15,7 +15,7 @@ import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
 
 @Repository
-public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
+public interface OrderRepository extends JpaRepository<OrderEntity,String> {
 
     @Query("SELECT oe FROM OrderEntity oe WHERE oe.orderDate = :date AND oe.orderstatus IN ('ACCEPTED', 'IN_TRANSIT')")
     List<OrderEntity> findOrdersByDateAndStatus(@Param("date") LocalDate date);
