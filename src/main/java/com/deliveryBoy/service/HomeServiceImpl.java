@@ -71,7 +71,7 @@ public class HomeServiceImpl  implements HomeService{
 
 	    @Override
 	    public void acceptOrder(String orderId) {
-	        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+	        OrderEntity orderEntity = orderRepository.findById(orderId)
 	                .orElseThrow(() -> new RuntimeException("Order not found"));
 	        orderEntity.setOrderstatus(OrderStatus.ACCEPTED);
 	        orderRepository.save(orderEntity);
@@ -79,7 +79,7 @@ public class HomeServiceImpl  implements HomeService{
 
 	    @Override
 	    public void rejectOrder(String orderId, String reason) {
-	        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+	        OrderEntity orderEntity = orderRepository.findById(orderId)
 	                .orElseThrow(() -> new RuntimeException("Order not found"));
 	        orderEntity.setOrderstatus(OrderStatus.REJECTED);
 	        orderEntity.setRejection(reason);  // Now setting as a String
