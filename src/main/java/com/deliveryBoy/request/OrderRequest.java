@@ -1,7 +1,8 @@
 package com.deliveryBoy.request;
 
 public class OrderRequest {
-	private String orderId;
+	
+	
 	private String customerName;
 	private String deliveryAddress;
 	private String contactNumber;
@@ -9,15 +10,8 @@ public class OrderRequest {
 	private String availabilityStatus; // Enum as String
 	private String deliveryBoyId;
 
-	// Getters and Setters
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
+	
+	
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -118,7 +112,7 @@ public class OrderRequest {
 
 		public OrderRequest build() {
 			OrderRequest orderRequest = new OrderRequest();
-			orderRequest.orderId = this.orderId;
+		
 			orderRequest.customerName = this.customerName;
 			orderRequest.deliveryAddress = this.deliveryAddress;
 			orderRequest.contactNumber = this.contactNumber;

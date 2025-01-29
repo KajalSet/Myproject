@@ -21,27 +21,30 @@ public class HomeServiceImpl  implements HomeService{
 
 	 @Autowired
 	    private OrderRepository orderRepository;
+	 
+	 
+	 
+	 
+	 @Override
+		public List<OrderRequest> getTodayOrders() {
 
-	    @Override
-	    public List<OrderRequest> getTodayOrders() {
+			LocalDate today = LocalDate.now();
+			List<OrderEntity> orders = orderRepository.findByOrderDate(today).stream()
+					.filter(order -> order.getOrderstatus() == OrderStatus.PENDING) 
+					.collect(Collectors.toList());
 
-	        LocalDate today = LocalDate.now();
-	        List<OrderEntity> orders = orderRepository.findByOrderDate(today);
+			if (orders.isEmpty()) {
+				throw new RuntimeException("No orders found today");
+			}
 
-	        if (orders.isEmpty()) {
-	            throw new RuntimeException("No orders found today");
-	        }
-
-	        return orders.stream()
-	                .map(order -> OrderRequest.builder()
-	                        .orderId(order.getId().toString())
-	                        .customerName(order.getCustomerName())
-	                        .deliveryAddress(order.getDeliveryAddress())
-	                        .contactNumber(order.getContactNumber())
-	                        .orderstatus(order.getOrderstatus().toString())
-	                        .build())
-	                .collect(Collectors.toList());
-	    }
+			return orders.stream()
+					.map(order -> OrderRequest.builder().orderId(order.getId().toString())
+							.customerName(order.getCustomerName()).deliveryAddress(order.getDeliveryAddress())
+							.contactNumber(order.getContactNumber()).orderstatus(order.getOrderstatus().toString()).build())
+					.collect(Collectors.toList());
+		}
+	 
+	 
 
 	    @Override
 	    public List<OrderRequest> getOrdersByStatus(String status) {
@@ -111,4 +114,27 @@ public class HomeServiceImpl  implements HomeService{
 	    public OrderEntity saveOrder(OrderEntity order) {
 	        return orderRepository.save(order);
 	    }
+	    
+	    
+//	    @Override
+//	    public List<OrderRequest> getTodayOrders() {
+//
+//	        LocalDate today = LocalDate.now();
+//	        List<OrderEntity> orders = orderRepository.findByOrderDate(today);
+//
+//	        if (orders.isEmpty()) {
+//	            throw new RuntimeException("No orders found today");
+//	        }
+//
+//	        return orders.stream()
+//	                .map(order -> OrderRequest.builder()
+//	                        .orderId(order.getId().toString())
+//	                        .customerName(order.getCustomerName())
+//	                        .deliveryAddress(order.getDeliveryAddress())
+//	                        .contactNumber(order.getContactNumber())
+//	                        .orderstatus(order.getOrderstatus().toString())
+//	                        .build())
+//	                .collect(Collectors.toList());
+//	    }
+
 }

@@ -20,42 +20,36 @@ import com.deliveryBoy.response.OrderResponse;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
-	
-	
-	
-	
-	
-	
-	
 	
     @Autowired
     private OrderRepository orderRepository;
     
     @Override
     public OrderEntity createOrder(OrderRequest orderRequest) {
-        // Create a new OrderEntity and set its fields
+       
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setCustomerName(orderRequest.getCustomerName());
         orderEntity.setDeliveryAddress(orderRequest.getDeliveryAddress());
         orderEntity.setContactNumber(orderRequest.getContactNumber());
        
-        orderEntity.setOrderDate(LocalDate.now()); // Set today's date for orderDate
-        orderEntity.setOrderstatus(OrderStatus.valueOf(orderRequest.getOrderstatus())); // Set order status
-        orderEntity.setAvailabilityStatus(AvailabilityStatus.valueOf(orderRequest.getAvailabilityStatus())); // Set availabilityStatus
+        orderEntity.setOrderDate(LocalDate.now()); 
+        orderEntity.setOrderstatus(OrderStatus.PENDING);
+        orderEntity.setAvailabilityStatus(AvailabilityStatus.valueOf(orderRequest.getAvailabilityStatus())); 
         orderEntity.setCreatedAt(LocalDateTime.now());
         try {
             UUID deliveryBoyId = UUID.fromString(orderRequest.getDeliveryBoyId());
-            orderEntity.setDeliveryBoyId(deliveryBoyId); // Set the deliveryBoyId
+            orderEntity.setDeliveryBoyId(deliveryBoyId); 
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid UUID format for deliveryBoyId: " + orderRequest.getDeliveryBoyId());
         }
+        
+        
+        
         orderEntity = orderRepository.save(orderEntity);
         System.out.println("Saved OrderEntity: " + orderEntity);
        
-        return orderEntity; // This will have the orderId populated by Hibernate
+        return orderEntity;
     }
-    
     
     
     
