@@ -22,6 +22,7 @@ import com.deliveryBoy.auth.User;
 import com.deliveryBoy.auth.UserRepo;
 import com.deliveryBoy.entity.DeliveryBoyAvailability;
 import com.deliveryBoy.entity.OrderEntity;
+import com.deliveryBoy.entity.OtpResponse;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
 
@@ -133,7 +134,15 @@ public class HomeController {
         }
     }
     
+//DBoy accept the order otp is send to his mobile no.
     
+    @PutMapping("/send-otp-delivery/{orderId}")
+    public ResponseEntity<OtpResponse> sendOtpToDeliveryBoy(@PathVariable String orderId) throws Exception {
+        OtpResponse otpResponse = homeService.sendOtpToDeliveryBoy(orderId);
+        return ResponseEntity.ok(otpResponse);
+    }
+
+
     
     
     
