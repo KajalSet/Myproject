@@ -1,7 +1,7 @@
 package com.deliveryBoy.controller;
 
 import java.util.Optional;
-import java.util.UUID;
+//import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +19,20 @@ import com.deliveryBoy.auth.AuthenticationResponse;
 import com.deliveryBoy.auth.CurrentUser;
 import com.deliveryBoy.auth.JdbcUserDetailsService;
 import com.deliveryBoy.auth.JwtUtil;
-import com.deliveryBoy.auth.MessageResponse;
+//import com.deliveryBoy.auth.MessageResponse;
 import com.deliveryBoy.auth.RefreshToken;
 import com.deliveryBoy.auth.RefreshTokenService;
 import com.deliveryBoy.auth.User;
 import com.deliveryBoy.auth.UserRepo;
+import com.deliveryBoy.entity.OtpResponse;
+import com.deliveryBoy.entity.SendOtp;
+import com.deliveryBoy.entity.VerifyOtp;
 import com.deliveryBoy.exception.RecordNotFoundException;
 import com.deliveryBoy.exception.TokenRefreshException;
+import com.deliveryBoy.repository.UserRepository;
 import com.deliveryBoy.request.TokenRefreshRequest;
 import com.deliveryBoy.response.TokenRefreshResponse;
+import com.deliveryBoy.service.WebClientService;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -47,9 +52,11 @@ public class AuthController {
 	@Autowired
 	private JwtUtil jwtTokenUtil;
 	
+	@Autowired
+	private WebClientService webClientService;
 	
-	
-	
+	@Autowired
+	private UserRepository userRepository;
 	
 	
 	
@@ -168,7 +175,43 @@ public class AuthController {
 		// Return a success message
 		return ResponseEntity.ok("You have been signed out successfully.");
 	}
+
+
+//added
 	
+	
+	
+	@PostMapping("/sendotp")
+	public OtpResponse sendOtp(@RequestBody SendOtp sendOtp) throws Exception {
+		// System.out.println(sendOtp.getMobile()+" "+ sendOtp.getFcmToken());
+		// sendOtp.getUsername()
+		return webClientService.checkAndcreateUser(sendOtp.getMobile(), "");
+	}
+	
+	
+	@PostMapping("/verifyotp")
+	public ResponseEntity<?> verifyOtp(@RequestBody VerifyOtp verifyOtp) throws Exception {
+		OtpResponse otpResponse = new OtpResponse();
+		otpResponse = (webClientService.verifyOTP((verifyOtp.getMobileNumber()), (verifyOtp.getOtp())));
+		System.out.println(otpResponse.toString());
+		if (otpResponse.getType().equalsIgnoreCase("success")) {
+			User user1 = userRepo.findByMobileNumber(verifyOtp.getMobileNumber());
+//			if (user1.getIsActive()) {
+//				return ResponseEntity.ok(new MessageResponse("User is already active"));
+//			}
+			user1.setMobileVerified(true);
+			// user1.setIsActive(true);
+			userRepo.save(user1);
+			otpResponse.setType(otpResponse.getType());
+			otpResponse.setMessage(otpResponse.getMessage());
+			return ResponseEntity.ok(otpResponse);
+		} else {
+			otpResponse.setType(otpResponse.getType());
+			otpResponse.setMessage(otpResponse.getMessage());
+			return ResponseEntity.ok(otpResponse);
+		}
+	}
+
 	
 
 //	@GetMapping("/resendVerifyEmail")

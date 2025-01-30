@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.deliveryBoy.entity.OrderEntity;
+import com.deliveryBoy.entity.OtpResponse;
 import com.deliveryBoy.enums.AvailabilityStatus;
 
 import com.deliveryBoy.request.OrderRequest;
@@ -29,4 +30,5 @@ public interface HomeService {
 
 	void rejectOrder(String orderId, String reason);
 
+	 OtpResponse sendOtpToDeliveryBoy(String orderId) throws Exception;
 }

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRepo extends JpaRepository<User, UUID>,JpaSpecificationExecutor<User>{
 
 	 Optional<User> findByUserName(String username);
+
+	User findByMobileNumber(String mobileNumber);
 	
 
 }
