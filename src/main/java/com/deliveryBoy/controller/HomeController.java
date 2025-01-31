@@ -65,7 +65,8 @@ public class HomeController {
         homeService.acceptOrder(orderId);
         return ResponseEntity.ok(new ApiResponse<>(true, null));
     }
-
+    
+    
     @PutMapping("/reject-order/{orderId}")
     public ResponseEntity<ApiResponse<Void>> rejectOrder(@PathVariable String orderId, @RequestParam String reason) {
         homeService.rejectOrder(orderId, reason);
@@ -141,7 +142,14 @@ public class HomeController {
         OtpResponse otpResponse = homeService.sendOtpToDeliveryBoy(orderId);
         return ResponseEntity.ok(otpResponse);
     }
+    
 
+//confirm delivery after verifying otp
+    @PutMapping("/confirm-delivery/{orderId}")
+    public ResponseEntity<ApiResponse<Void>> confirmDelivery(@PathVariable String orderId) throws Exception {
+        homeService.confirmDelivery(orderId);
+        return ResponseEntity.ok(new ApiResponse<>(true, null));
+    }
 
     
     

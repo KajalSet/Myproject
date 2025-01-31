@@ -31,4 +31,6 @@ public interface HomeService {
 	void rejectOrder(String orderId, String reason);
 
 	 OtpResponse sendOtpToDeliveryBoy(String orderId) throws Exception;
+
+	void confirmDelivery(String orderId) throws Exception;
 }
