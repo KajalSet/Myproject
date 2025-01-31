@@ -2,17 +2,22 @@ package com.deliveryBoy.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.deliveryBoy.auth.User;
 import com.deliveryBoy.entity.OrderEntity;
+import com.deliveryBoy.entity.OtpResponse;
+import com.deliveryBoy.entity.SendOtp;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
 
 import com.deliveryBoy.repository.OrderRepository;
+import com.deliveryBoy.repository.UserRepository;
 import com.deliveryBoy.request.OrderRequest;
 
 
@@ -22,7 +27,11 @@ public class HomeServiceImpl  implements HomeService{
 	 @Autowired
 	    private OrderRepository orderRepository;
 	 
-	 
+	@Autowired
+	private UserRepository userRepo;
+	
+	@Autowired
+    private WebClientService webClientService;
 	 
 	 
 	 @Override
@@ -69,6 +78,14 @@ public class HomeServiceImpl  implements HomeService{
 	                .collect(Collectors.toList());
 	    }
 
+//	    @Override
+//	    public void acceptOrder(String orderId) {
+//	        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+//	                .orElseThrow(() -> new RuntimeException("Order not found"));
+//	        orderEntity.setOrderstatus(OrderStatus.ACCEPTED);
+//	        orderRepository.save(orderEntity);
+//	    }
+
 	    @Override
 	    public void acceptOrder(String orderId) {
 	        OrderEntity orderEntity = orderRepository.findById(orderId)
@@ -76,10 +93,9 @@ public class HomeServiceImpl  implements HomeService{
 	        orderEntity.setOrderstatus(OrderStatus.ACCEPTED);
 	        orderRepository.save(orderEntity);
 	    }
-
 	    @Override
 	    public void rejectOrder(String orderId, String reason) {
-	        OrderEntity orderEntity = orderRepository.findById(orderId)
+	        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
 	                .orElseThrow(() -> new RuntimeException("Order not found"));
 	        orderEntity.setOrderstatus(OrderStatus.REJECTED);
 	        orderEntity.setRejection(reason);  // Now setting as a String
@@ -115,6 +131,113 @@ public class HomeServiceImpl  implements HomeService{
 	        return orderRepository.save(order);
 	    }
 	    
+	    
+//	    @Override
+//	    public OtpResponse sendOtpToDeliveryBoy(String orderId) throws Exception{
+//	        // Fetch the order details
+//	        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+//	                .orElseThrow(() -> new RuntimeException("Order not found"));
+//
+//	        // Retrieve the delivery boy ID
+//	        UUID deliveryBoyId = orderEntity.getDeliveryBoyId();
+//	        if (deliveryBoyId == null) {
+//	            throw new RuntimeException("Delivery boy is not assigned to this order");
+//	        }
+//
+//	        // Fetch delivery boy details from the User table
+//	        User deliveryBoy = userRepo.findById(deliveryBoyId)
+//	                .orElseThrow(() -> new RuntimeException("Delivery boy details not found"));
+//
+//	        // Send OTP using the existing method
+//	        SendOtp sendOtpRequest = new SendOtp();
+//	        sendOtpRequest.setMobile(deliveryBoy.getMobileNumber());
+//
+//	        return sendOtp(sendOtpRequest); // Reusing your existing sendOtp method
+//	    }
+//
+
+	    //working and respose is 200
+	    @Override
+	    public OtpResponse sendOtpToDeliveryBoy(String orderId) throws Exception {
+	        // Fetch the order details using String ID
+	        OrderEntity orderEntity = orderRepository.findById(orderId)
+	                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+	        // Retrieve the delivery boy ID
+	        UUID deliveryBoyId = orderEntity.getDeliveryBoyId();
+	        if (deliveryBoyId == null) {
+	            throw new RuntimeException("Delivery boy is not assigned to this order");
+	        }
+
+	        // Fetch delivery boy details from the User table
+	        User deliveryBoy = userRepo.findById(deliveryBoyId)
+	                .orElseThrow(() -> new RuntimeException("Delivery boy details not found"));
+
+	        // Send OTP using the existing method
+	        SendOtp sendOtpRequest = new SendOtp();
+	        sendOtpRequest.setMobile(deliveryBoy.getMobileNumber());
+
+	        return sendOtp(sendOtpRequest); // Reusing your existing sendOtp method
+	    }
+
+		private OtpResponse sendOtp(SendOtp sendOtpRequest) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+//otp generation a random number-working a random number is created
+	
+//	    @Override
+//	    public OtpResponse sendOtpToDeliveryBoy(String orderId) throws Exception {
+//	        // Fetch the order details
+//	        OrderEntity orderEntity = orderRepository.findById(orderId)
+//	                .orElseThrow(() -> new RuntimeException("Order not found"));
+//
+//	        // Retrieve the delivery boy ID
+//	        UUID deliveryBoyId = orderEntity.getDeliveryBoyId();
+//	        if (deliveryBoyId == null) {
+//	            throw new RuntimeException("Delivery boy is not assigned to this order");
+//	        }
+//
+//	        // Fetch delivery boy details from the User table
+//	        User deliveryBoy = userRepo.findById(deliveryBoyId)
+//	                .orElseThrow(() -> new RuntimeException("Delivery boy details not found"));
+//
+//	        // Generate a dynamic 6-digit OTP
+//	        String dynamicOtp = generateRandomOtp();
+//
+//	        // Instead of calling sendOtp(), directly return the dynamic OTP response
+//	        OtpResponse otpResponse = new OtpResponse();
+//	        otpResponse.setType(dynamicOtp);
+//	        otpResponse.setMessage("OTP has been sent successfully");
+//
+//	        return otpResponse;
+//	    }
+
+	    // Utility method to generate a random 6-digit OTP
+	    private String generateRandomOtp() {
+	        Random random = new Random();
+	        int otp = 100000 + random.nextInt(900000);  // Generate a random 6-digit number
+	        return String.valueOf(otp);
+	    }
+
+	
+	    
+	    @Override
+	    public void confirmDelivery(String orderId) throws Exception {
+	        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+	                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+	        // Check if the order is already delivered
+	        if (orderEntity.getOrderstatus() == OrderStatus.DELIVERED) {
+	            throw new RuntimeException("Order already delivered");
+	        }
+
+	        // Update order status to DELIVERED
+	        orderEntity.setOrderstatus(OrderStatus.DELIVERED);
+	        orderRepository.save(orderEntity);
+	    }
+
 	    
 //	    @Override
 //	    public List<OrderRequest> getTodayOrders() {
