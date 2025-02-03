@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 @SpringBootApplication
 
-@OpenAPIDefinition(servers = { @Server(url = "/hrms/", description = "Default Server URL") })
+@OpenAPIDefinition(servers = { @Server(url = "/deliveryBoy", description = "Default Server URL") })
 
 public class SolwyzApplication {
 
