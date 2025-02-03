@@ -8,11 +8,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, UUID>,JpaSpecificationExecutor<User>{
+public interface UserRepo extends JpaRepository<User, UUID>, JpaSpecificationExecutor<User> {
 
-	 Optional<User> findByUserName(String username);
+	Optional<User> findByUserName(String username);
 
 	User findByMobileNumber(String mobileNumber);
-	
+
+	Optional<User> findByIdAndMpin(UUID userId, String mpin);
 
 }

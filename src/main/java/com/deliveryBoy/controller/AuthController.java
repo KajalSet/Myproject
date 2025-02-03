@@ -2,6 +2,7 @@ package com.deliveryBoy.controller;
 
 import java.util.Optional;
 //import java.util.UUID;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +32,12 @@ import com.deliveryBoy.entity.VerifyOtp;
 import com.deliveryBoy.exception.RecordNotFoundException;
 import com.deliveryBoy.exception.TokenRefreshException;
 import com.deliveryBoy.repository.UserRepository;
+import com.deliveryBoy.request.MPin;
 import com.deliveryBoy.request.TokenRefreshRequest;
 import com.deliveryBoy.response.TokenRefreshResponse;
 import com.deliveryBoy.service.WebClientService;
+
+import kong.unirest.HttpStatus;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -367,36 +372,36 @@ public class AuthController {
 //		// reSendOTP(mobile);
 //	}
 
-//	@PostMapping("/savempin")
-//	public ResponseEntity<User> saveMpin(@RequestBody mPin mpin) throws Exception {
-//		Optional<User> user = userRepo.findById(mpin.getUserId());
-//		user.get().setMpin(mpin.getMpin());
-//		return ResponseEntity.ok(userRepo.save(user.get()));
-//	}
+	@PostMapping("/savempin")
+	public ResponseEntity<User> saveMpin(@RequestBody MPin mpin) throws Exception {
+		Optional<User> user = userRepo.findById(mpin.getUserId());
+		user.get().setMpin(mpin.getMpin());
+		return ResponseEntity.ok(userRepo.save(user.get()));
+	}
 
-//	@PostMapping("/validatempin")
-//	public ResponseEntity<Integer> validatempin(@RequestBody mPin mpin) throws Exception {
-//		Optional<User> user = userRepo.findByIdAndMpin(mpin.getUserId(), mpin.getMpin());
-//		if (user.get() != null) {
-//			return ResponseEntity.ok(HttpStatus.SC_OK);
-//		}
-//		return ResponseEntity.ok(HttpStatus.SC_NOT_FOUND);
-//	}
+	@PostMapping("/validatempin")
+	public ResponseEntity<Integer> validatempin(@RequestBody MPin mpin) throws Exception {
+		Optional<User> user = userRepo.findByIdAndMpin(mpin.getUserId(), mpin.getMpin());
+		if (user.get() != null) {
+			return ResponseEntity.ok(HttpStatus.OK);
+		}
+		return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+	}
 
-//	@PostMapping("/resetmpin")
-//	public OtpResponse resetmpin(@RequestBody mPin mpin) throws Exception {
-//		Optional<User> user = userRepo.findById(mpin.getUserId());
-//		if (user.get() != null) {
-//			return webClientService.checkAndcreateUser(user.get().getMobileNumber(), "");
-//		}
-//		return null;
-//	}
+	@PostMapping("/resetmpin")
+	public OtpResponse resetmpin(@RequestBody MPin mpin) throws Exception {
+		Optional<User> user = userRepo.findById(mpin.getUserId());
+		if (user.get() != null) {
+			return webClientService.checkAndcreateUser(user.get().getMobileNumber(), "");
+		}
+		return null;
+	}
 
-//	@PostMapping("/forgotmpin")
-//	public OtpResponse forgotmpin(@PathVariable UUID userId) throws Exception {
-//		Optional<User> user = userRepo.findById(userId);
-//		return webClientService.checkAndcreateUser(user.get().getMobileNumber(), "");
-//	}
+	@PostMapping("/forgotmpin")
+	public OtpResponse forgotmpin(@PathVariable UUID userId) throws Exception {
+		Optional<User> user = userRepo.findById(userId);
+		return webClientService.checkAndcreateUser(user.get().getMobileNumber(), "");
+	}
 
 //	@PostMapping("/verifyCustomerOTP")
 //	@Operation(summary = "Verify Customer OTP")
