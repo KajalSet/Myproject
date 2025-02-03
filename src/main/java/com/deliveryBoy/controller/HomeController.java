@@ -23,6 +23,7 @@ import com.deliveryBoy.auth.UserRepo;
 import com.deliveryBoy.entity.DeliveryBoyAvailability;
 import com.deliveryBoy.entity.OrderEntity;
 import com.deliveryBoy.entity.OtpResponse;
+import com.deliveryBoy.entity.VerifyOtpRequest;
 import com.deliveryBoy.enums.AvailabilityStatus;
 import com.deliveryBoy.enums.OrderStatus;
 
@@ -142,7 +143,15 @@ public class HomeController {
         OtpResponse otpResponse = homeService.sendOtpToDeliveryBoy(orderId);
         return ResponseEntity.ok(otpResponse);
     }
+   
     
+    
+    @PostMapping("/verify-otp")
+    public ResponseEntity<OtpResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
+        OtpResponse otpResponse = homeService.verifyOtp(verifyOtpRequest.getMobileNumber(), verifyOtpRequest.getOtp());
+        return ResponseEntity.ok(otpResponse);
+    }
+
 
 //confirm delivery after verifying otp
     @PutMapping("/confirm-delivery/{orderId}")

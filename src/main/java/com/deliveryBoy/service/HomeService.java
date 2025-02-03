@@ -33,4 +33,6 @@ public interface HomeService {
 	 OtpResponse sendOtpToDeliveryBoy(String orderId) throws Exception;
 
 	void confirmDelivery(String orderId) throws Exception;
+
+	OtpResponse verifyOtp(String mobileNumber, int otp) throws Exception;
 }

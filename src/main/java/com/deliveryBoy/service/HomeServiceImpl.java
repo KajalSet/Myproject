@@ -221,7 +221,25 @@ public class HomeServiceImpl  implements HomeService{
 	        return String.valueOf(otp);
 	    }
 
-	
+	    @Override
+	    public OtpResponse verifyOtp(String mobileNumber, int otp) throws Exception{
+	        OtpResponse otpResponse = new OtpResponse();
+
+	        // Static OTP for testing (can be changed as needed)
+	        int staticOtp = 123456;
+
+	        // Verify the OTP
+	        if (otp == staticOtp) {
+	            otpResponse.setType("success");
+	            otpResponse.setMessage("OTP verified successfully.");
+	        } else {
+	            otpResponse.setType("failure");
+	            otpResponse.setMessage("Invalid OTP.");
+	        }
+
+	        return otpResponse;
+	    }
+
 	    
 	    @Override
 	    public void confirmDelivery(String orderId) throws Exception {
