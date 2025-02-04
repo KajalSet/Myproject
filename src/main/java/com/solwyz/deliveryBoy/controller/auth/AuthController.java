@@ -67,7 +67,7 @@ public class AuthController {
 	}
 
 	// Get all Delivery Boys (Admin only)
-	@GetMapping("/all")
+	@GetMapping("/allUsers")
 	public ResponseEntity<List<DeliveryBoy>> getAllDeliveryBoys() {
 		List<DeliveryBoy> deliveryBoys = deliveryBoyService.getAllDeliveryBoys();
 		return ResponseEntity.ok(deliveryBoys);

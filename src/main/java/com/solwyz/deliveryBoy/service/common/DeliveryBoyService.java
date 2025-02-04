@@ -1,5 +1,7 @@
 package com.solwyz.deliveryBoy.service.common;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,9 +13,7 @@ import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
 import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
-import com.solwyz.deliveryBoy.repo.common.DeliveryBoyRepository;
-
-import java.util.List;
+import com.solwyz.deliveryBoy.repositories.common.DeliveryBoyRepository;
 
 @Service
 public class DeliveryBoyService {
@@ -111,5 +111,9 @@ public class DeliveryBoyService {
 	// Get all Delivery Boys (Admin only)
 	public List<DeliveryBoy> getAllDeliveryBoys() {
 		return deliveryBoyRepository.findAll();
+	}
+
+	public DeliveryBoy findByUsername(String username) {
+		return deliveryBoyRepository.findByUsername(username);
 	}
 }

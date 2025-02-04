@@ -1,10 +1,11 @@
 package com.solwyz.deliveryBoy.models;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -15,12 +16,16 @@ public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String address;
-	private String status; // e.g., "accepted", "delivered", "cancelled"
+
+	private String customerName;
+	private String customerAddress;
+	private double totalPrice;
+	private String status; // e.g., "Pending", "Accepted", "Delivered"
 
 	@ManyToOne
-	@JoinColumn(name = "delivery_boy_id")
 	private DeliveryBoy deliveryBoy;
+
+	private Date orderDate;
 
 	public Long getId() {
 		return id;
@@ -30,12 +35,28 @@ public class Order {
 		this.id = id;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getCustomerName() {
+		return customerName;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerAddress() {
+		return customerAddress;
+	}
+
+	public void setCustomerAddress(String customerAddress) {
+		this.customerAddress = customerAddress;
+	}
+
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
 	public String getStatus() {
@@ -52,6 +73,14 @@ public class Order {
 
 	public void setDeliveryBoy(DeliveryBoy deliveryBoy) {
 		this.deliveryBoy = deliveryBoy;
+	}
+
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
 	}
 
 }
