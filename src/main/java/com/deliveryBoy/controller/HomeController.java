@@ -66,6 +66,7 @@ public class HomeController {
         homeService.acceptOrder(orderId);
         return ResponseEntity.ok(new ApiResponse<>(true, null));
     }
+  
     
     
     @PutMapping("/reject-order/{orderId}")
@@ -146,19 +147,51 @@ public class HomeController {
    
     
     
-    @PostMapping("/verify-otp")
+    @PostMapping("/verifyotp")
     public ResponseEntity<OtpResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
         OtpResponse otpResponse = homeService.verifyOtp(verifyOtpRequest.getMobileNumber(), verifyOtpRequest.getOtp());
         return ResponseEntity.ok(otpResponse);
     }
-
-
-//confirm delivery after verifying otp
+    
+    
+  //confirm delivery after verifying otp
     @PutMapping("/confirm-delivery/{orderId}")
-    public ResponseEntity<ApiResponse<Void>> confirmDelivery(@PathVariable String orderId) throws Exception {
+    public ResponseEntity<ApiResponse<String>> confirmDelivery(@PathVariable String orderId) throws Exception {
         homeService.confirmDelivery(orderId);
-        return ResponseEntity.ok(new ApiResponse<>(true, null));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Delivery Confirmed Successfully"));
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+//    @PostMapping("/verify-otp")
+//    public ResponseEntity<OtpResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
+//        if (verifyOtpRequest == null || verifyOtpRequest.getMobileNumber() == null) {
+//            return ResponseEntity.badRequest().body(new OtpResponse("failure", "Invalid request data."));
+//        }
+//        OtpResponse otpResponse = homeService.verifyOtp(verifyOtpRequest.getMobileNumber(), verifyOtpRequest.getOtp());
+//        return ResponseEntity.ok(otpResponse);
+//    }
+    
+//    @PostMapping("/verify-otp")
+//    public ResponseEntity<OtpResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) throws Exception {
+//        System.out.println("Incoming OTP verification request: " + verifyOtpRequest);
+//        OtpResponse otpResponse = homeService.verifyOtp(verifyOtpRequest.getMobileNumber(), verifyOtpRequest.getOtp());
+//        System.out.println("OTP verification response: " + otpResponse);
+//        return ResponseEntity.ok(otpResponse);
+//    }
+
+
+
+
 
     
     

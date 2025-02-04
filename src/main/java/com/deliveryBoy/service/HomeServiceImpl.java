@@ -243,16 +243,17 @@ public class HomeServiceImpl  implements HomeService{
 	    
 	    @Override
 	    public void confirmDelivery(String orderId) throws Exception {
-	        OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+	        //OrderEntity orderEntity = orderRepository.findById(UUID.fromString(orderId))
+	        		OrderEntity orderEntity=orderRepository.findById(orderId)
 	                .orElseThrow(() -> new RuntimeException("Order not found"));
 
 	        // Check if the order is already delivered
-	        if (orderEntity.getOrderstatus() == OrderStatus.DELIVERED) {
-	            throw new RuntimeException("Order already delivered");
-	        }
+	       // if (orderEntity.getOrderstatus() == OrderStatus.DELIVERED) {
+	          //  throw new RuntimeException("Order already delivered");
+	      //  }
 
 	        // Update order status to DELIVERED
-	        orderEntity.setOrderstatus(OrderStatus.DELIVERED);
+	        orderEntity.setOrderstatus(OrderStatus.COMPLETED);
 	        orderRepository.save(orderEntity);
 	    }
 

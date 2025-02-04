@@ -31,6 +31,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
+		 // addedJ-Skip JWT validation for /api/auth/verifyotp endpoint
+        if (request.getRequestURI().equals("/api/auth/verifyotp")) {
+            filterChain.doFilter(request, response);  // Continue without processing the token
+            return;
+        }
+
 		final String requestTokenHeader = request.getHeader("Authorization");
 		String username = null;
 		String jwtToken = null;
