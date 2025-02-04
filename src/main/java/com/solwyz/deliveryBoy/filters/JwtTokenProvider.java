@@ -19,7 +19,7 @@ public class JwtTokenProvider {
 	@Value("${app.jwtExpirationMs}")
 	private Long accessTokenValidity;
 
-	@Value("${app.refreshExpirationMs}")
+	@Value("${app.jwtRefreshExpirationMs}")
 	private Long refreshTokenValidity;
 
 	public String generateAccessToken(DeliveryBoy deliveryBoy) {

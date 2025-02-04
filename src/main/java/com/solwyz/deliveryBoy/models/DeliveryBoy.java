@@ -2,17 +2,21 @@ package com.solwyz.deliveryBoy.models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.solwyz.deliveryBoy.Enum.Role;
 
 @Entity
+@Table(name = "delivery_boy")
 public class DeliveryBoy {
 
 	@Id
@@ -28,8 +32,8 @@ public class DeliveryBoy {
 	@Enumerated(EnumType.STRING)
 	private Role role; // Role (either ADMIN or DELIVERY_BOY)
 
-	@OneToMany(mappedBy = "deliveryBoy")
-	private List<Order> orders; // List of orders for the delivery boy
+	@OneToMany(mappedBy = "deliveryBoy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Order> orders;
 
 	// Getters and setters for all fields
 
