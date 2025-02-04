@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 
+@OpenAPIDefinition(servers = { @Server(url = "/solwyz/", description = "Default Server URL") })
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "Delivery Boy API", version = "1.0", description = "API for managing delivery boys"))
 public class DeliveryBoyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DeliveryBoyApplication.class, args);
