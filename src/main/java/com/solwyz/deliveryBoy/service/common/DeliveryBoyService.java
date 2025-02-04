@@ -13,6 +13,8 @@ import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.repo.common.DeliveryBoyRepository;
 
+import java.util.List;
+
 @Service
 public class DeliveryBoyService {
 
@@ -26,50 +28,43 @@ public class DeliveryBoyService {
 
 	// Register new Delivery Boy (Admin)
 	public DeliveryBoy registerDeliveryBoy(DeliveryBoy deliveryBoy) {
-		// DeliveryBoy deliveryBoy = new DeliveryBoy();
+		// Register without MPIN
 		deliveryBoy.setUsername(deliveryBoy.getUsername());
 		deliveryBoy.setPassword(passwordEncoder.encode(deliveryBoy.getPassword())); // Hash the password
 		deliveryBoy.setRole(Role.DELIVERY_BOY);
 		deliveryBoy.setAssignedArea(deliveryBoy.getAssignedArea());
-		deliveryBoy.setMpin(deliveryBoy.getMpin());
-		deliveryBoy.setOnline(deliveryBoy.isOnline());
+		deliveryBoy.setOnline(false); // Default status is offline
 		return deliveryBoyRepository.save(deliveryBoy);
 	}
-	
-	 public AuthenticationResponse authenticate(AuthenticationRequest request) {
-	        // Fetch the DeliveryBoy by username
-	        DeliveryBoy deliveryBoy = deliveryBoyRepository.findByUsername(request.getUsername());
-	        
-	        // Validate if delivery boy exists and password matches
-	        if (deliveryBoy == null || !passwordEncoder.matches(request.getPassword(), deliveryBoy.getPassword())) {
-	            throw new AuthenticationException("Invalid credentials");
-	        }
 
-	        // Validate if MPIN is set
-	        if (deliveryBoy.getMpin() == null) {
-	            throw new AuthenticationException("Please set your MPIN.");
-	        }
+	// Authenticate Delivery Boy (Login)
+	public AuthenticationResponse authenticate(AuthenticationRequest request) {
+		DeliveryBoy deliveryBoy = deliveryBoyRepository.findByUsername(request.getUsername());
 
-	        // Validate if the MPIN matches
-	        if (!passwordEncoder.matches(request.getMpin(), deliveryBoy.getMpin())) {
-				throw new AuthenticationException("Invalid MPIN.");
-	        }
+		if (deliveryBoy == null || !passwordEncoder.matches(request.getPassword(), deliveryBoy.getPassword())) {
+			throw new AuthenticationException("Invalid credentials");
+		}
 
-	        // Generate JWT Tokens
-	        String accessToken = jwtTokenProvider.generateAccessToken(deliveryBoy);
-	        String refreshToken = jwtTokenProvider.generateRefreshToken(deliveryBoy);
+		// Validate if MPIN is set
+		if (deliveryBoy.getMpin() == null) {
+			throw new AuthenticationException("Please set your MPIN.");
+		}
 
-	        // Return authentication response with tokens
-	        return new AuthenticationResponse(accessToken, refreshToken);
-	    }
+		// Validate MPIN
+		if (!passwordEncoder.matches(request.getMpin(), deliveryBoy.getMpin())) {
+			throw new AuthenticationException("Invalid MPIN.");
+		}
 
+		String accessToken = jwtTokenProvider.generateAccessToken(deliveryBoy);
+		String refreshToken = jwtTokenProvider.generateRefreshToken(deliveryBoy);
 
+		return new AuthenticationResponse(accessToken, refreshToken);
+	}
 
-	// Refresh token
+	// Refresh Token
 	public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
 		String refreshToken = refreshTokenRequest.getRefreshToken();
 
-		// Check if refresh token is valid
 		if (!jwtTokenProvider.validateToken(refreshToken)) {
 			throw new RuntimeException("Invalid refresh token.");
 		}
@@ -98,5 +93,23 @@ public class DeliveryBoyService {
 		deliveryBoy.setMpin(passwordEncoder.encode(mpin)); // Hash the MPIN
 		deliveryBoyRepository.save(deliveryBoy);
 		return "MPIN set successfully!";
+	}
+
+	// Change Online/Offline Status
+	public String changeStatus(String username, boolean status) {
+		DeliveryBoy deliveryBoy = deliveryBoyRepository.findByUsername(username);
+
+		if (deliveryBoy == null) {
+			throw new RuntimeException("User not found");
+		}
+
+		deliveryBoy.setOnline(status); // Set online/offline
+		deliveryBoyRepository.save(deliveryBoy);
+		return "Status changed successfully!";
+	}
+
+	// Get all Delivery Boys (Admin only)
+	public List<DeliveryBoy> getAllDeliveryBoys() {
+		return deliveryBoyRepository.findAll();
 	}
 }

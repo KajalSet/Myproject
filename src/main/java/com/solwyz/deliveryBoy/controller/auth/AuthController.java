@@ -3,13 +3,7 @@ package com.solwyz.deliveryBoy.controller.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.solwyz.deliveryBoy.Exceptions.AuthenticationException;
 import com.solwyz.deliveryBoy.filters.JwtTokenProvider;
@@ -20,6 +14,8 @@ import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.service.common.DeliveryBoyService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -39,6 +35,7 @@ public class AuthController {
 		return deliveryBoyService.registerDeliveryBoy(deliveryBoy);
 	}
 
+	// Login Delivery Boy and generate JWT tokens
 	@PostMapping("/login")
 	public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authRequest) {
 		AuthenticationResponse response = deliveryBoyService.authenticate(authRequest);
@@ -57,9 +54,22 @@ public class AuthController {
 		return deliveryBoyService.refreshToken(refreshTokenRequest);
 	}
 
-	// Set MPIN (Delivery Boy only)
+	// Set MPIN (Delivery Boy only, after login)
 	@PostMapping("/set-mpin")
 	public String setMpin(@RequestParam String username, @RequestParam String mpin) {
 		return deliveryBoyService.setMpin(username, mpin);
+	}
+
+	// Change Online/Offline Status (Delivery Boy only)
+	@PostMapping("/change-status")
+	public String changeStatus(@RequestParam String username, @RequestParam boolean status) {
+		return deliveryBoyService.changeStatus(username, status);
+	}
+
+	// Get all Delivery Boys (Admin only)
+	@GetMapping("/all")
+	public ResponseEntity<List<DeliveryBoy>> getAllDeliveryBoys() {
+		List<DeliveryBoy> deliveryBoys = deliveryBoyService.getAllDeliveryBoys();
+		return ResponseEntity.ok(deliveryBoys);
 	}
 }
