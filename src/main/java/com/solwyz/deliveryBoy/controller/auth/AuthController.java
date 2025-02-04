@@ -34,8 +34,8 @@ public class AuthController {
 
 	// Register Delivery Boy (Admin only)
 	@PostMapping("/register")
-	public DeliveryBoy registerDeliveryBoy(@RequestBody DeliveryBoyDTO deliveryBoyDTO) {
-		return deliveryBoyService.registerDeliveryBoy(deliveryBoyDTO);
+	public DeliveryBoy registerDeliveryBoy(@RequestBody DeliveryBoy deliveryBoy) {
+		return deliveryBoyService.registerDeliveryBoy(deliveryBoy);
 	}
 
 	// Login (Admin or Delivery Boy)

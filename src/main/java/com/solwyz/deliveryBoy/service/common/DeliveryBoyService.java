@@ -25,11 +25,14 @@ public class DeliveryBoyService {
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	// Register new Delivery Boy (Admin)
-	public DeliveryBoy registerDeliveryBoy(DeliveryBoyDTO deliveryBoyDTO) {
-		DeliveryBoy deliveryBoy = new DeliveryBoy();
-		deliveryBoy.setUsername(deliveryBoyDTO.getUsername());
-		deliveryBoy.setPassword(passwordEncoder.encode(deliveryBoyDTO.getPassword())); // Hash the password
+	public DeliveryBoy registerDeliveryBoy(DeliveryBoy deliveryBoy) {
+		//DeliveryBoy deliveryBoy = new DeliveryBoy();
+		deliveryBoy.setUsername(deliveryBoy.getUsername());
+		deliveryBoy.setPassword(passwordEncoder.encode(deliveryBoy.getPassword())); // Hash the password
 		deliveryBoy.setRole(Role.DELIVERY_BOY);
+		deliveryBoy.setAssignedArea(deliveryBoy.getAssignedArea());
+		deliveryBoy.setMpin(deliveryBoy.getMpin());
+		deliveryBoy.setOnline(deliveryBoy.isOnline());
 		return deliveryBoyRepository.save(deliveryBoy);
 	}
 
