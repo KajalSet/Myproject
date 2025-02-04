@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.solwyz.deliveryBoy.filters.JwtTokenProvider;
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
-import com.solwyz.deliveryBoy.pojo.request.DeliveryBoyDTO;
+
 import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.service.common.DeliveryBoyService;

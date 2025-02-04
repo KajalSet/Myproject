@@ -8,7 +8,7 @@ import com.solwyz.deliveryBoy.Enum.Role;
 import com.solwyz.deliveryBoy.filters.JwtTokenProvider;
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
-import com.solwyz.deliveryBoy.pojo.request.DeliveryBoyDTO;
+
 import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.repo.common.DeliveryBoyRepository;
@@ -26,7 +26,7 @@ public class DeliveryBoyService {
 
 	// Register new Delivery Boy (Admin)
 	public DeliveryBoy registerDeliveryBoy(DeliveryBoy deliveryBoy) {
-		//DeliveryBoy deliveryBoy = new DeliveryBoy();
+		// DeliveryBoy deliveryBoy = new DeliveryBoy();
 		deliveryBoy.setUsername(deliveryBoy.getUsername());
 		deliveryBoy.setPassword(passwordEncoder.encode(deliveryBoy.getPassword())); // Hash the password
 		deliveryBoy.setRole(Role.DELIVERY_BOY);
