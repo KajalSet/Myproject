@@ -1,17 +1,20 @@
 package com.solwyz.deliveryBoy.controller.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.solwyz.deliveryBoy.Exceptions.AuthenticationException;
 import com.solwyz.deliveryBoy.filters.JwtTokenProvider;
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
-
 import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.service.common.DeliveryBoyService;
@@ -23,8 +26,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/api/auth")
 @Tag(name = "User Authentication", description = "APIs for User Authentication related operations")
 public class AuthController {
-
-
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
@@ -38,10 +39,16 @@ public class AuthController {
 		return deliveryBoyService.registerDeliveryBoy(deliveryBoy);
 	}
 
-	// Login (Admin or Delivery Boy)
 	@PostMapping("/login")
-	public AuthenticationResponse login(@RequestBody AuthenticationRequest request) {
-		return deliveryBoyService.authenticate(request);
+	public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authRequest) {
+		AuthenticationResponse response = deliveryBoyService.authenticate(authRequest);
+		return ResponseEntity.ok(response);
+	}
+
+	// Handle AuthenticationException
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 	}
 
 	// Refresh Token (if expired)
@@ -56,5 +63,3 @@ public class AuthController {
 		return deliveryBoyService.setMpin(username, mpin);
 	}
 }
-
-

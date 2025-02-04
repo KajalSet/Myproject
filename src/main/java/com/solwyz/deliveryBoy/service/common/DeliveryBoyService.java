@@ -5,10 +5,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.solwyz.deliveryBoy.Enum.Role;
+import com.solwyz.deliveryBoy.Exceptions.AuthenticationException;
 import com.solwyz.deliveryBoy.filters.JwtTokenProvider;
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
-
 import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.repo.common.DeliveryBoyRepository;
@@ -35,30 +35,35 @@ public class DeliveryBoyService {
 		deliveryBoy.setOnline(deliveryBoy.isOnline());
 		return deliveryBoyRepository.save(deliveryBoy);
 	}
+	
+	 public AuthenticationResponse authenticate(AuthenticationRequest request) {
+	        // Fetch the DeliveryBoy by username
+	        DeliveryBoy deliveryBoy = deliveryBoyRepository.findByUsername(request.getUsername());
+	        
+	        // Validate if delivery boy exists and password matches
+	        if (deliveryBoy == null || !passwordEncoder.matches(request.getPassword(), deliveryBoy.getPassword())) {
+	            throw new AuthenticationException("Invalid credentials");
+	        }
 
-	// Authenticate user (Admin or Delivery Boy)
-	public AuthenticationResponse authenticate(AuthenticationRequest request) {
-		DeliveryBoy deliveryBoy = deliveryBoyRepository.findByUsername(request.getUsername());
+	        // Validate if MPIN is set
+	        if (deliveryBoy.getMpin() == null) {
+	            throw new AuthenticationException("Please set your MPIN.");
+	        }
 
-		if (deliveryBoy == null || !passwordEncoder.matches(request.getPassword(), deliveryBoy.getPassword())) {
-			throw new RuntimeException("Invalid credentials");
-		}
+	        // Validate if the MPIN matches
+	        if (!passwordEncoder.matches(request.getMpin(), deliveryBoy.getMpin())) {
+				throw new AuthenticationException("Invalid MPIN.");
+	        }
 
-		// Check if the MPIN is set, if not, ask for MPIN setup
-		if (deliveryBoy.getMpin() == null) {
-			throw new RuntimeException("Please set your MPIN.");
-		}
+	        // Generate JWT Tokens
+	        String accessToken = jwtTokenProvider.generateAccessToken(deliveryBoy);
+	        String refreshToken = jwtTokenProvider.generateRefreshToken(deliveryBoy);
 
-		// If MPIN is set, validate the MPIN
-		if (!passwordEncoder.matches(request.getMpin(), deliveryBoy.getMpin())) {
-			throw new RuntimeException("Invalid MPIN.");
-		}
+	        // Return authentication response with tokens
+	        return new AuthenticationResponse(accessToken, refreshToken);
+	    }
 
-		String accessToken = jwtTokenProvider.generateAccessToken(deliveryBoy);
-		String refreshToken = jwtTokenProvider.generateRefreshToken(deliveryBoy);
 
-		return new AuthenticationResponse(accessToken, refreshToken);
-	}
 
 	// Refresh token
 	public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {

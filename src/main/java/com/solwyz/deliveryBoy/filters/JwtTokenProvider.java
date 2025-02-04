@@ -25,9 +25,9 @@ public class JwtTokenProvider {
 	private Long refreshTokenValidity;
 
 	public String generateAccessToken(DeliveryBoy deliveryBoy) {
-		return Jwts.builder().setSubject(deliveryBoy.getUsername()).claim("role", deliveryBoy.getRole().toString())
-				.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
-				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+		return Jwts.builder().setSubject(deliveryBoy.getUsername()).setIssuedAt(new Date())
+				.setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
+				.signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 	}
 
 	// Generate Refresh Token
