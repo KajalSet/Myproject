@@ -4,11 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.models.Order;
 import com.solwyz.deliveryBoy.repositories.common.OrderRepository;
 
+@Service
 public class OrderService {
 
 	@Autowired
