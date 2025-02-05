@@ -37,7 +37,7 @@ public class SecurityConfig {
 				.authorizeRequests(auth -> auth
 						// Allow Swagger & Public Endpoints
 						.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-						.antMatchers("/index", "/api/auth/login","/api/auth/set-mpin", "/api/auth/register").permitAll()
+						.antMatchers("/index", "/api/auth/login","/api/auth/set-mpin","/api/orders/create", "/api/auth/register").permitAll()
 
 						// Restrict by Roles
 						.antMatchers("/api/deliveryboys/**").hasRole("ADMIN").antMatchers("/api/orders/**")

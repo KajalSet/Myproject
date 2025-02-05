@@ -1,10 +1,14 @@
 package com.solwyz.deliveryBoy.filters;
 
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
@@ -27,12 +31,11 @@ public class JwtTokenProvider {
 	private Long refreshTokenValidity;
 
 	public String generateAccessToken(DeliveryBoy deliveryBoy) {
-		Map<String, Object> claims = new HashMap<>();
-		claims.put("id", deliveryBoy.getId()); // Add ID
-		claims.put("address", deliveryBoy.getAddress()); // Add Address
-
-		return Jwts.builder().setClaims(claims) // Set custom claims
-				.setSubject(deliveryBoy.getUsername()) // Set username as subject
+		return Jwts.builder().setSubject(deliveryBoy.getUsername()).claim("id", deliveryBoy.getId()) // Include
+																										// DeliveryBoy
+																										// ID
+				.claim("address", deliveryBoy.getAssignedArea()) // Include Address
+				.claim("role", deliveryBoy.getRole().name()) // Include Role
 				.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
 				.signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 	}
@@ -56,6 +59,17 @@ public class JwtTokenProvider {
 
 	public Claims extractClaims(String token) {
 		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+	}
+
+	public Authentication getAuthentication(String token) {
+		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+
+		String username = claims.getSubject();
+		String role = claims.get("role", String.class); // Extract role
+
+		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+
+		return new UsernamePasswordAuthenticationToken(username, null, authorities);
 	}
 
 	// Get Username from Token
