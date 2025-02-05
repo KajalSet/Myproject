@@ -54,7 +54,29 @@ public class OrderController {
 		return ResponseEntity.ok(orderService.getPendingOrders());
 	}
 
+	// Get all cancelled orders for a delivery boy
+	@GetMapping("/{deliveryBoyId}/cancelled")
+	public ResponseEntity<List<Order>> getCancelledOrders(@PathVariable Long deliveryBoyId) {
+		return ResponseEntity.ok(orderService.getCancelledOrdersByDeliveryBoy(deliveryBoyId));
+	}
 
+	// Cancel Order (Delivery Boy)
+	@PostMapping("/{orderId}/cancel")
+	public ResponseEntity<Order> cancelOrder(@PathVariable Long orderId) {
+		return ResponseEntity.ok(orderService.cancelOrder(orderId));
+	}
+
+	// Get All Orders by Delivery Boy ID
+	@GetMapping("/all/{deliveryBoyId}")
+	public ResponseEntity<List<Order>> getAllOrdersByDeliveryBoy(@PathVariable Long deliveryBoyId) {
+		return ResponseEntity.ok(orderService.getAllOrdersByDeliveryBoy(deliveryBoyId));
+	}
+
+	// Get Today's Accepted Orders by Delivery Boy ID
+	@GetMapping("/accepted/today/{deliveryBoyId}")
+	public ResponseEntity<List<Order>> getAcceptedOrdersForToday(@PathVariable Long deliveryBoyId) {
+		return ResponseEntity.ok(orderService.getAcceptedOrdersForToday(deliveryBoyId));
+	}
 
 	// Get orders by date range (filter by day, week, month, year)
 	@GetMapping("/filter")

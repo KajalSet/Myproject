@@ -1,5 +1,6 @@
 package com.solwyz.deliveryBoy.service.common;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +54,26 @@ public class OrderService {
 		order.setStatus("REJECTED");
 		return orderRepository.save(order);
 	}
+	
+	
+	public Order cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        order.setStatus("CANCELLED");
+        return orderRepository.save(order);
+    }
+
+    // Get All Orders for a Delivery Boy
+    public List<Order> getAllOrdersByDeliveryBoy(Long deliveryBoyId) {
+        return orderRepository.findByDeliveryBoyId(deliveryBoyId);
+    }
+
+    // Get Today's Accepted Orders for a Delivery Boy
+    public List<Order> getAcceptedOrdersForToday(Long deliveryBoyId) {
+        LocalDate today = LocalDate.now();
+        return orderRepository.findByDeliveryBoyIdAndStatusAndDate(deliveryBoyId, "ACCEPTED", today);
+    }
 
 	// Get Orders Assigned to a Delivery Boy
 	public List<Order> getOrdersByDeliveryBoy(Long deliveryBoyId, String status) {
@@ -64,11 +85,13 @@ public class OrderService {
 		return orderRepository.findByStatus("PENDING");
 	}
 
-
-
 	// Get orders by date range (day/week/month/year)
 	public List<Order> getOrdersByDateRange(Date startDate, Date endDate) {
 		return orderRepository.findByOrderDateBetween(startDate, endDate);
+	}
+
+	public List<Order> getCancelledOrdersByDeliveryBoy(Long deliveryBoyId) {
+		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "CANCELLED");
 	}
 
 }

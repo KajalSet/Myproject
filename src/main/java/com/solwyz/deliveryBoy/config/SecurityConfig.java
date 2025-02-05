@@ -69,4 +69,9 @@ public class SecurityConfig {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
+	
+	
+	//cancelled orders -deliveryboy
+	//all orders deliveryboy id
+	//accepted orders for today by delivery boy id
 }
