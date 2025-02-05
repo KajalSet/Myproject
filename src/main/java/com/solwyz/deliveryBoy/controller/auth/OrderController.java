@@ -39,7 +39,7 @@ public class OrderController {
 
 	// Get all orders assigned to a delivery boy
 	@GetMapping("/my-orders")
-	public List<Order> getOrdersForDeliveryBoy(@RequestParam String username) {
+	public List<Order> getOrdersForDeliveryBoy(@RequestParam String username,@RequestParam String status) {
 		DeliveryBoy deliveryBoy = deliveryBoyService.findByUsername(username);
 		return orderService.getOrdersForDeliveryBoy(deliveryBoy);
 	}

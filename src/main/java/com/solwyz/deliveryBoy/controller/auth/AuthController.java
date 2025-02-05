@@ -72,4 +72,10 @@ public class AuthController {
 		List<DeliveryBoy> deliveryBoys = deliveryBoyService.getAllDeliveryBoys();
 		return ResponseEntity.ok(deliveryBoys);
 	}
+
+	@GetMapping("/delivery-boy/{id}")
+	public ResponseEntity<DeliveryBoy> getDeliveryBoyById(@PathVariable Long id) {
+		DeliveryBoy deliveryBoy = deliveryBoyService.getDeliveryBoyById(id);
+		return ResponseEntity.ok(deliveryBoy);
+	}
 }

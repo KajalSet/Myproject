@@ -116,4 +116,10 @@ public class DeliveryBoyService {
 	public DeliveryBoy findByUsername(String username) {
 		return deliveryBoyRepository.findByUsername(username);
 	}
+
+	public DeliveryBoy getDeliveryBoyById(Long id) {
+		return deliveryBoyRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Delivery Boy not found with ID: " + id));
+	}
+
 }

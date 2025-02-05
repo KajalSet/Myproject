@@ -28,6 +28,13 @@ public class DeliveryBoy {
 	private String mpin; // MPIN (hashed)
 	private String assignedArea;
 	private boolean isOnline; // Online status
+	
+	
+	
+	private String address;
+	
+	private String mobileNumner;
+	
 
 	@Enumerated(EnumType.STRING)
 	private Role role; // Role (either ADMIN or DELIVERY_BOY)
@@ -100,4 +107,22 @@ public class DeliveryBoy {
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getMobileNumner() {
+		return mobileNumner;
+	}
+
+	public void setMobileNumner(String mobileNumner) {
+		this.mobileNumner = mobileNumner;
+	}
+	
+	
 }
