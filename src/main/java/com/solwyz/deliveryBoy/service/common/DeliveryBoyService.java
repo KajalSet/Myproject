@@ -84,15 +84,30 @@ public class DeliveryBoyService {
 
 	// Set MPIN for the DeliveryBoy
 	public String setMpin(String username, String mpin) {
+		if (username == null || username.isEmpty()) {
+			throw new IllegalArgumentException("Username cannot be empty");
+		}
+
+		if (mpin == null || mpin.isEmpty()) {
+			throw new IllegalArgumentException("MPIN cannot be empty");
+		}
+
 		DeliveryBoy deliveryBoy = deliveryBoyRepository.findByUsername(username);
 
 		if (deliveryBoy == null) {
 			throw new RuntimeException("User not found");
 		}
 
-		deliveryBoy.setMpin(passwordEncoder.encode(mpin)); // Hash the MPIN
-		deliveryBoyRepository.save(deliveryBoy);
-		return "MPIN set successfully!";
+		// Encode and set MPIN
+		deliveryBoy.setMpin(passwordEncoder.encode(mpin));
+
+		// Save to database
+		try {
+			deliveryBoyRepository.save(deliveryBoy);
+			return "MPIN set successfully!";
+		} catch (Exception e) {
+			throw new RuntimeException("Error saving MPIN: " + e.getMessage());
+		}
 	}
 
 	// Change Online/Offline Status
