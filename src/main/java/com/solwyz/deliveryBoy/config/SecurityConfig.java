@@ -13,7 +13,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
-
 import com.solwyz.deliveryBoy.filters.JwtAuthFilter;
 
 @Configuration
@@ -37,11 +36,18 @@ public class SecurityConfig {
 				.authorizeRequests(auth -> auth
 						// Allow Swagger & Public Endpoints
 						.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-						.antMatchers("/index", "/api/auth/login","/api/auth/set-mpin","/api/orders/**", "/api/auth/register").permitAll()
+						.antMatchers("/index", "/api/auth/login", "/api/auth/register").permitAll()
 
-						// Restrict by Roles
-						.antMatchers("/api/deliveryboys/**").hasRole("ADMIN").antMatchers("/api/orders/**")
-						.hasRole("DELIVERY_BOY")
+						// Allow setting MPIN without JWT
+						.antMatchers("/api/auth/set-mpin").permitAll()
+
+						// Order APIs: Only Delivery Boy can accept/reject orders
+						.antMatchers("/api/orders/create").hasAuthority("ADMIN") // Only Admin can create orders
+						.antMatchers("/api/orders/**").hasAuthority("DELIVERY_BOY") // Only Delivery Boy can manage
+																					// orders
+
+						// Delivery Boy Management: Only Admin can access
+						.antMatchers("/api/deliveryboys/**").hasAuthority("ADMIN")
 
 						// Authenticate Everything Else
 						.anyRequest().authenticated())
