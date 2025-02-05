@@ -21,10 +21,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByDeliveryBoyId(Long deliveryBoyId);
 
-    @Query("SELECT o FROM Order o WHERE o.deliveryBoy.id = :deliveryBoyId AND o.status = :status AND DATE(o.createdAt) = :today")
-    List<Order> findByDeliveryBoyIdAndStatusAndDate(@Param("deliveryBoyId") Long deliveryBoyId, 
-                                                    @Param("status") String status, 
-                                                    @Param("today") LocalDate today);
+//    @Query("SELECT o FROM Order o WHERE o.deliveryBoy.id = :deliveryBoyId AND o.status = :status AND DATE(o.createdAt) = :today")
+//    List<Order> findByDeliveryBoyIdAndStatusAndDate(@Param("deliveryBoyId") Long deliveryBoyId, 
+//                                                    @Param("status") String status, 
+//                                                    @Param("today") LocalDate today);
 }
 	
 	
