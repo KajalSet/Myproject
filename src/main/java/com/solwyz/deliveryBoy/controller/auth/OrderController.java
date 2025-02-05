@@ -5,73 +5,56 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.models.Order;
-import com.solwyz.deliveryBoy.service.common.DeliveryBoyService;
 import com.solwyz.deliveryBoy.service.common.OrderService;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/orders")
-@Tag(name = "Orders", description = "APIs for order related operations")
 public class OrderController {
 
 	@Autowired
 	private OrderService orderService;
 
-	@Autowired
-	private DeliveryBoyService deliveryBoyService;
-
-	// Get all orders (for admin)
-	@GetMapping
-	public List<Order> getAllOrders() {
-		return orderService.getAllOrders();
+	// Create Order (Admin or Customer)
+	@PostMapping("/create")
+	public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+		return ResponseEntity.ok(orderService.createOrder(order));
 	}
 
-	// Get all orders assigned to a delivery boy
-	@GetMapping("/my-orders")
-	public List<Order> getOrdersForDeliveryBoy(@RequestParam String username,@RequestParam String status) {
-		DeliveryBoy deliveryBoy = deliveryBoyService.findByUsername(username);
-		return orderService.getOrdersForDeliveryBoy(deliveryBoy);
+	// Accept Order (Delivery Boy)
+	@PostMapping("/{orderId}/accept/{deliveryBoyId}")
+	public ResponseEntity<Order> acceptOrder(@PathVariable Long orderId, @PathVariable Long deliveryBoyId) {
+		return ResponseEntity.ok(orderService.acceptOrder(orderId, deliveryBoyId));
 	}
 
-	// Accept an order
-	@PostMapping("/accept")
-	public ResponseEntity<Order> acceptOrder(@RequestParam Long orderId, @RequestParam String username) {
-		DeliveryBoy deliveryBoy = deliveryBoyService.findByUsername(username);
-		Order acceptedOrder = orderService.acceptOrder(orderId, deliveryBoy);
-		return ResponseEntity.ok(acceptedOrder);
+	// Reject Order (Delivery Boy)
+	@PostMapping("/{orderId}/reject")
+	public ResponseEntity<Order> rejectOrder(@PathVariable Long orderId) {
+		return ResponseEntity.ok(orderService.rejectOrder(orderId));
 	}
 
-	// Reject an order
-	@PostMapping("/reject")
-	public ResponseEntity<Order> rejectOrder(@RequestParam Long orderId) {
-		Order rejectedOrder = orderService.rejectOrder(orderId);
-		return ResponseEntity.ok(rejectedOrder);
+	// Get Orders Assigned to Delivery Boy
+	@GetMapping("/assigned/{deliveryBoyId}")
+	public ResponseEntity<List<Order>> getAssignedOrders(@PathVariable Long deliveryBoyId,
+			@RequestParam String status) {
+		return ResponseEntity.ok(orderService.getOrdersByDeliveryBoy(deliveryBoyId, status));
 	}
 
-	// Mark an order as delivered
-	@PostMapping("/deliver")
-	public ResponseEntity<Order> deliverOrder(@RequestParam Long orderId) {
-		Order deliveredOrder = orderService.markOrderAsDelivered(orderId);
-		return ResponseEntity.ok(deliveredOrder);
+	// Get Pending Orders (Delivery Boys can see this)
+	@GetMapping("/pending")
+	public ResponseEntity<List<Order>> getPendingOrders() {
+		return ResponseEntity.ok(orderService.getPendingOrders());
 	}
 
-	// Get orders by status (for delivery boy)
-	@GetMapping("/status")
-	public List<Order> getOrdersByStatus(@RequestParam String username, @RequestParam String status) {
-		DeliveryBoy deliveryBoy = deliveryBoyService.findByUsername(username);
-		return orderService.getOrdersByStatus(deliveryBoy, status);
-	}
+
 
 	// Get orders by date range (filter by day, week, month, year)
 	@GetMapping("/filter")
