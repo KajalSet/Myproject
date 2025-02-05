@@ -31,11 +31,8 @@ public class JwtTokenProvider {
 	private Long refreshTokenValidity;
 
 	public String generateAccessToken(DeliveryBoy deliveryBoy) {
-		return Jwts.builder().setSubject(deliveryBoy.getUsername()).claim("id", deliveryBoy.getId()) // Include
-																										// DeliveryBoy
-																										// ID
-				.claim("address", deliveryBoy.getAssignedArea()) // Include Address
-				.claim("role", deliveryBoy.getRole().name()) // Include Role
+		return Jwts.builder().setSubject(deliveryBoy.getUsername()).claim("id", deliveryBoy.getId())
+				.claim("address", deliveryBoy.getAddress()).claim("role", "ROLE_DELIVERY_BOY") // 
 				.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
 				.signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 	}
@@ -62,12 +59,17 @@ public class JwtTokenProvider {
 	}
 
 	public Authentication getAuthentication(String token) {
-		Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parser().setSigningKey("jwtSecret") // Make sure this matches token signing key
+				.parseClaimsJws(token).getBody();
 
 		String username = claims.getSubject();
 		String role = claims.get("role", String.class); // Extract role
 
-		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+		if (role == null) {
+			throw new RuntimeException("Role is missing in token");
+		}
+
+		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
 		return new UsernamePasswordAuthenticationToken(username, null, authorities);
 	}
