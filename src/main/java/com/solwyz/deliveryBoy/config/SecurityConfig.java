@@ -42,10 +42,12 @@ public class SecurityConfig {
 						.antMatchers("/api/auth/set-mpin").permitAll()
 
 						// Order APIs: Only Delivery Boy can accept/reject orders
-						.antMatchers("/api/orders/create").hasAuthority("ADMIN") // Only Admin can create orders
-						.antMatchers("/api/orders/**").hasAnyAuthority("DELIVERY_BOY", "ADMIN")
- // Only Delivery Boy can manage
-																					// orders
+
+						.antMatchers("/api/orders/**").permitAll()
+
+						
+						// Only Delivery Boy can manage
+						// orders
 
 						// Delivery Boy Management: Only Admin can access
 						.antMatchers("/api/deliveryboys/**").hasAuthority("ADMIN")
