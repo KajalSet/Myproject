@@ -73,10 +73,10 @@ public class OrderController {
 	}
 
 	// Get Today's Accepted Orders by Delivery Boy ID
-	@GetMapping("/accepted/today/{deliveryBoyId}")
-	public ResponseEntity<List<Order>> getAcceptedOrdersForToday(@PathVariable Long deliveryBoyId) {
-		return ResponseEntity.ok(orderService.getAcceptedOrdersForToday(deliveryBoyId));
-	}
+//	@GetMapping("/accepted/today/{deliveryBoyId}")
+//	public ResponseEntity<List<Order>> getAcceptedOrdersForToday(@PathVariable Long deliveryBoyId) {
+//		return ResponseEntity.ok(orderService.getAcceptedOrdersForToday(deliveryBoyId));
+//	}
 
 	// Get orders by date range (filter by day, week, month, year)
 	@GetMapping("/filter")

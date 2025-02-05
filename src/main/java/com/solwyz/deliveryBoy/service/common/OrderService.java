@@ -68,13 +68,15 @@ public class OrderService {
     public List<Order> getAllOrdersByDeliveryBoy(Long deliveryBoyId) {
         return orderRepository.findByDeliveryBoyId(deliveryBoyId);
     }
+    
+//    public List<Order>  (Long deliveryBoyId) {
+//        LocalDate today = LocalDate.now();
+//        return orderRepository.findByDeliveryBoyIdAndStatusAndDate(deliveryBoyId, "ACCEPTED", today);
+//    }
+
 
     // Get Today's Accepted Orders for a Delivery Boy
-    public List<Order> getAcceptedOrdersForToday(Long deliveryBoyId) {
-        LocalDate today = LocalDate.now();
-        return orderRepository.findByDeliveryBoyIdAndStatusAndDate(deliveryBoyId, "ACCEPTED", today);
-    }
-
+ 
 	// Get Orders Assigned to a Delivery Boy
 	public List<Order> getOrdersByDeliveryBoy(Long deliveryBoyId, String status) {
 		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, status);
