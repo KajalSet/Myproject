@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -23,6 +25,7 @@ public class Order {
 	private String status; // e.g., "Pending", "Accepted", "Delivered"
 
 	@ManyToOne
+	@JsonIgnore // Prevents infinite recursion
 	private DeliveryBoy deliveryBoy;
 
 	private Date orderDate;
