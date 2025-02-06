@@ -43,7 +43,7 @@ public class OrderController {
 
 	// Reject Order (Delivery Boy)
 	@PostMapping("/{orderId}/reject")
-	public ResponseEntity<ApiResponse<Order>> rejectOrder(@PathVariable Long orderId) {
+	public ResponseEntity<ApiResponse<Order>> rejectOrder(@PathVariable Long orderId,@RequestBody String reason) {
 		Order rejectedOrder = orderService.rejectOrder(orderId);
 		ApiResponse<Order> response = new ApiResponse<>("success", rejectedOrder);
 		return ResponseEntity.ok(response);
